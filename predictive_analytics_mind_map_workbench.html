@@ -86,25 +86,25 @@
       <div>
         <h1 class="text-sm font-bold text-slate-100 flex items-center gap-2">
           Predictive Analytics Mind Map
-          <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 font-medium">De-cluttered Hand-Drawing Mode</span>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 font-medium">Efficient Drawing Mode</span>
         </h1>
-        <p class="text-[11px] text-slate-400">Zero overlapping channels • Built directly from Week 4 slides</p>
+        <p class="text-[11px] text-slate-400">Items with identical line signatures combined • 60% fewer pencil lines</p>
       </div>
     </div>
 
     <!-- Center: Interactive Mode Switcher -->
     <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
-      <button onclick="setViewMode('focus')" id="mode-focus" class="px-3 py-1.5 rounded-lg font-medium transition-all bg-sky-600 text-white shadow-sm flex items-center gap-1.5">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-        Clean Focus Mode
+      <button onclick="setGroupingMode('combined')" id="mode-combined" class="px-3 py-1.5 rounded-lg font-medium transition-all bg-emerald-600 text-white shadow-sm flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        Combined (Drawing-Ready)
       </button>
-      <button onclick="setViewMode('wizard')" id="mode-wizard" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all flex items-center gap-1.5">
+      <button onclick="setGroupingMode('granular')" id="mode-granular" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        Granular (All 22 Items)
+      </button>
+      <button onclick="toggleWalkthrough()" id="mode-wizard" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all flex items-center gap-1.5">
         <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-        Pen Walkthrough (Step-by-Step)
-      </button>
-      <button onclick="setViewMode('all')" id="mode-all" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all flex items-center gap-1.5">
-        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-        All Highway Joins
+        Pen Walkthrough
       </button>
     </div>
 
@@ -131,9 +131,55 @@
       <!-- Overhead Legend Card -->
       <div class="absolute top-4 left-4 z-10 bg-slate-900/90 backdrop-blur border border-slate-800 rounded-xl p-3 shadow-xl max-w-xs pointer-events-auto">
         <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center justify-between">
-          <span>Non-Crossing Legend</span>
-          <span class="text-[10px] text-sky-400 bg-sky-950 px-1.5 py-0.5 rounded border border-sky-800">Clear Paths</span>
+          <span>Efficiency Blueprint</span>
+          <span id="efficiency-badge" class="text-[10px] text-emerald-400 bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-800">18 Lines vs 44</span>
         </div>
+        <div class="space-y-1.5 text-xs">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-0.5 bg-slate-400"></div>
+            <span class="text-slate-300 font-medium">Solid Line: Mind map hierarchy tree</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-0.5 border-t-2 border-dashed border-amber-400"></div>
+            <span class="text-amber-300">Orange Dashed: Algo Cluster → Family</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-0.5 border-t-2 border-dashed border-sky-400"></div>
+            <span class="text-sky-300">Blue Dashed: Algo Cluster → Question</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-0.5 border-t-2 border-dashed border-emerald-400"></div>
+            <span class="text-emerald-300">Green Dashed: Metric Suite → Question</span>
+          </div>
+        </div>
+        <div class="mt-2.5 pt-2 border-t border-slate-800/80 text-[11px] text-slate-400">
+          <span class="text-emerald-400 font-semibold">Hand-drawing Pro-Tip:</span> Write names inside bracketed cluster boxes. Draw <strong>one shared highway line</strong> per cluster to eliminate clutter!
+        </div>
+      </div>
+
+      <!-- Pen Walkthrough Floating Controller Dock -->
+      <div id="walkthrough-bar" class="hidden absolute top-4 left-1/2 -translate-x-1/2 z-20 bg-slate-900/95 border border-amber-500/60 shadow-2xl px-4 py-2.5 rounded-2xl flex items-center gap-4 backdrop-blur pointer-events-auto">
+        <button onclick="prevWizardStep()" class="p-1.5 hover:bg-slate-800 rounded-lg text-slate-300 hover:text-white transition-colors" title="Previous Step">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <div class="text-center min-w-[280px]">
+          <div class="flex items-center justify-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            <span id="wizard-step-badge" class="text-[11px] font-mono font-bold text-amber-300 uppercase tracking-wide">Step 1 of 11</span>
+          </div>
+          <div id="wizard-step-title" class="text-xs font-bold text-white mt-0.5">Central Box: PREDICTION</div>
+          <div id="wizard-step-action" class="text-[11px] text-slate-400 max-w-sm mx-auto">Draw the root box in the center of your paper.</div>
+        </div>
+        <button onclick="nextWizardStep()" class="p-1.5 hover:bg-slate-800 rounded-lg text-slate-300 hover:text-white transition-colors" title="Next Step">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <!-- Hint Banner Toast -->
+      <div id="bottom-instruction-toast" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 bg-slate-900/90 border border-slate-800 shadow-xl px-4 py-2 rounded-full flex items-center gap-2.5 backdrop-blur pointer-events-auto transition-all">
+        <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+        <span id="toast-text" class="text-xs text-slate-300">Combined Mode Active: Methods sharing identical connections are clustered into clean brackets.</span>
+      </div>
         <div class="space-y-1.5 text-xs">
           <div class="flex items-center gap-2">
             <div class="w-6 h-0.5 bg-slate-400"></div>
@@ -240,16 +286,16 @@
 
         <!-- Hand Drawing Recommendations -->
         <div class="space-y-2">
-          <h3 class="font-bold text-slate-200 uppercase tracking-wider text-[11px]">How to Avoid Overlapping with a Pen</h3>
+          <h3 class="font-bold text-slate-200 uppercase tracking-wider text-[11px]">How Combining Saves Your Paper</h3>
           <div class="space-y-2 text-slate-400 text-[11px]">
-            <div class="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/80">
-              <span class="text-sky-400 font-bold">1. Position Strategy:</span> Place <em>Questions</em> on the top-left, <em>Algorithms</em> down the middle-left, and <em>Technique Families</em> at the bottom-left. That way, all algorithm joins remain on the left margin without crossing the center.
+            <div class="bg-slate-950/60 p-2.5 rounded-lg border border-emerald-900/50">
+              <span class="text-emerald-400 font-bold">1. Bracket Grouping Technique:</span> On your paper, draw a box or curly bracket around <code>[Accuracy, Precision, Recall, Specificity, NPV, F1]</code>. Pull <strong>a single dashed line</strong> to <strong>Classification</strong>. This satisfies all 6 metrics with 1 line instead of 6!
             </div>
-            <div class="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/80">
-              <span class="text-amber-400 font-bold">2. Pen Colors:</span> Use a black pen for solid tree boxes/lines, and an orange/blue colored pencil or dashed pen for the relationship joins.
+            <div class="bg-slate-950/60 p-2.5 rounded-lg border border-sky-900/50">
+              <span class="text-sky-400 font-bold">2. Continuous Error Bracket:</span> Group <code>[MAE, MSE, RMSE, MAPE]</code> into one bracket. Pull 1 line to <strong>Regression</strong> and 1 line to <strong>Time Series Forecasting</strong>.
             </div>
-            <div class="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/80">
-              <span class="text-emerald-400 font-bold">3. Overhead Arc for Metrics:</span> Instead of drawing lines straight through the central word PREDICTION, draw curved arches over the top of the paper to reach Classification and Regression.
+            <div class="bg-slate-950/60 p-2.5 rounded-lg border border-amber-900/50">
+              <span class="text-amber-400 font-bold">3. Tree & Ensembles Cluster:</span> Group <code>Decision Tree, Random Forest, Gradient Boosting</code> together. They all belong to <strong>Machine Learning</strong> and both solve <strong>Classification & Regression</strong>.
             </div>
           </div>
         </div>
@@ -331,108 +377,111 @@
       </div>
 
       <div class="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-4 text-xs">
+        <div class="bg-emerald-950/40 border border-emerald-800/80 p-3 rounded-xl flex items-center justify-between text-emerald-200">
+          <div>
+            <span class="font-bold text-emerald-400">Efficiency Formula:</span> Group items with identical destinations into bracketed nodes on paper.
+          </div>
+          <span class="font-mono text-xs bg-emerald-900/80 px-2 py-0.5 rounded border border-emerald-700">Lines: 44 ➔ 18</span>
+        </div>
+
         <table class="w-full text-left border-collapse">
           <thead>
             <tr class="border-b border-slate-700 text-slate-400 text-[11px] uppercase tracking-wider bg-slate-950/60">
-              <th class="py-2.5 px-3">Named Algorithm</th>
+              <th class="py-2.5 px-3">Combined Cluster & Specific Algorithms</th>
               <th class="py-2.5 px-3">Family Join (Dashed)</th>
               <th class="py-2.5 px-3">Question Join(s) (Dashed)</th>
-              <th class="py-2.5 px-3">Slide Source / Logic</th>
+              <th class="py-2.5 px-3">Efficiency Savings</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-800/70 text-slate-300">
             <tr class="hover:bg-slate-800/40">
-              <td class="py-2 px-3 font-semibold text-sky-300">Linear Regression</td>
-              <td class="py-2 px-3 text-amber-300">Statistics</td>
-              <td class="py-2 px-3 text-sky-400">Regression</td>
-              <td class="py-2 px-3 text-slate-400">Slides 23, 33</td>
+              <td class="py-2.5 px-3">
+                <div class="font-bold text-sky-300">Linear & Regularized Models</div>
+                <div class="text-[11px] text-slate-400">Linear Regression, Ridge, Lasso, Elastic Net</div>
+              </td>
+              <td class="py-2.5 px-3 text-amber-300 font-medium">Statistics</td>
+              <td class="py-2.5 px-3 text-sky-400 font-medium">Regression</td>
+              <td class="py-2.5 px-3 text-emerald-400 font-mono">2 lines (saves 6)</td>
             </tr>
             <tr class="hover:bg-slate-800/40">
-              <td class="py-2 px-3 font-semibold text-sky-300">Ridge / Lasso / Elastic Net</td>
-              <td class="py-2 px-3 text-amber-300">Statistics</td>
-              <td class="py-2 px-3 text-sky-400">Regression</td>
-              <td class="py-2 px-3 text-slate-400">Slide 33 (Regularized linear)</td>
+              <td class="py-2.5 px-3">
+                <div class="font-bold text-sky-300">Probabilistic Classifiers</div>
+                <div class="text-[11px] text-slate-400">Logistic Regression, Naive Bayes</div>
+              </td>
+              <td class="py-2.5 px-3 text-amber-300 font-medium">Statistics</td>
+              <td class="py-2.5 px-3 text-emerald-400 font-medium">Classification</td>
+              <td class="py-2.5 px-3 text-emerald-400 font-mono">2 lines (saves 2)</td>
             </tr>
             <tr class="hover:bg-slate-800/40">
-              <td class="py-2 px-3 font-semibold text-sky-300">Logistic Regression</td>
-              <td class="py-2 px-3 text-amber-300">Statistics</td>
-              <td class="py-2 px-3 text-emerald-400">Classification</td>
-              <td class="py-2 px-3 text-slate-400">Slide 25 (Probability odds)</td>
+              <td class="py-2.5 px-3">
+                <div class="font-bold text-sky-300">Temporal Sequence Model</div>
+                <div class="text-[11px] text-slate-400">ARIMA (Autoregressive Integrated Moving Avg)</div>
+              </td>
+              <td class="py-2.5 px-3 text-amber-300 font-medium">Statistics</td>
+              <td class="py-2.5 px-3 text-indigo-400 font-medium">Time series forecasting</td>
+              <td class="py-2.5 px-3 text-slate-400 font-mono">2 lines</td>
+            </tr>
+            <tr class="hover:bg-slate-800/40 bg-emerald-950/20">
+              <td class="py-2.5 px-3">
+                <div class="font-bold text-amber-300">Tree Models & Ensembles</div>
+                <div class="text-[11px] text-slate-300 font-medium">Decision Tree, Random Forest, Gradient Boosting</div>
+              </td>
+              <td class="py-2.5 px-3 text-amber-300 font-medium">Machine learning</td>
+              <td class="py-2.5 px-3 text-white font-semibold">Classification + Regression</td>
+              <td class="py-2.5 px-3 text-emerald-400 font-mono">3 lines (saves 6)</td>
             </tr>
             <tr class="hover:bg-slate-800/40">
-              <td class="py-2 px-3 font-semibold text-sky-300">Naive Bayes</td>
-              <td class="py-2 px-3 text-amber-300">Statistics</td>
-              <td class="py-2 px-3 text-emerald-400">Classification</td>
-              <td class="py-2 px-3 text-slate-400">Slides 18, 24</td>
-            </tr>
-            <tr class="hover:bg-slate-800/40">
-              <td class="py-2 px-3 font-semibold text-sky-300">ARIMA</td>
-              <td class="py-2 px-3 text-amber-300">Statistics</td>
-              <td class="py-2 px-3 text-indigo-400">Time series forecasting</td>
-              <td class="py-2 px-3 text-slate-400">Assignment Brief Example</td>
-            </tr>
-            <tr class="hover:bg-slate-800/40 bg-sky-950/20">
-              <td class="py-2 px-3 font-bold text-amber-300">Decision Tree</td>
-              <td class="py-2 px-3 text-amber-300">Machine learning</td>
-              <td class="py-2 px-3 text-white font-semibold">Classification + Regression (2 Joins!)</td>
-              <td class="py-2 px-3 text-amber-400">Explicit assignment highlight</td>
-            </tr>
-            <tr class="hover:bg-slate-800/40">
-              <td class="py-2 px-3 font-semibold text-sky-300">Random Forest</td>
-              <td class="py-2 px-3 text-amber-300">Machine learning</td>
-              <td class="py-2 px-3 text-white">Classification + Regression</td>
-              <td class="py-2 px-3 text-slate-400">Slides 25, 33</td>
-            </tr>
-            <tr class="hover:bg-slate-800/40">
-              <td class="py-2 px-3 font-semibold text-sky-300">Gradient Boosting</td>
-              <td class="py-2 px-3 text-amber-300">Machine learning</td>
-              <td class="py-2 px-3 text-white">Classification + Regression</td>
-              <td class="py-2 px-3 text-slate-400">Slides 25, 33</td>
-            </tr>
-            <tr class="hover:bg-slate-800/40">
-              <td class="py-2 px-3 font-semibold text-sky-300">Support Vector Machine</td>
-              <td class="py-2 px-3 text-amber-300">Machine learning</td>
-              <td class="py-2 px-3 text-white">Classification + Regression</td>
-              <td class="py-2 px-3 text-slate-400">Slide 25</td>
-            </tr>
-            <tr class="hover:bg-slate-800/40">
-              <td class="py-2 px-3 font-semibold text-sky-300">k-Nearest Neighbours</td>
-              <td class="py-2 px-3 text-amber-300">Machine learning</td>
-              <td class="py-2 px-3 text-white">Classification + Regression</td>
-              <td class="py-2 px-3 text-slate-400">Slides 19, 33</td>
+              <td class="py-2.5 px-3">
+                <div class="font-bold text-sky-300">Margin & Distance Classifiers/Regressors</div>
+                <div class="text-[11px] text-slate-400">Support Vector Machine (SVM), k-Nearest Neighbours</div>
+              </td>
+              <td class="py-2.5 px-3 text-amber-300 font-medium">Machine learning</td>
+              <td class="py-2.5 px-3 text-white">Classification + Regression</td>
+              <td class="py-2.5 px-3 text-emerald-400 font-mono">3 lines (saves 3)</td>
             </tr>
             <tr class="hover:bg-slate-800/40 bg-purple-950/20">
-              <td class="py-2 px-3 font-bold text-purple-300">Neural Network</td>
-              <td class="py-2 px-3 text-purple-300">Deep learning</td>
-              <td class="py-2 px-3 text-white font-semibold">Classification + Regression + Time Series (3 Joins!)</td>
-              <td class="py-2 px-3 text-purple-300">Slides 20, 33</td>
+              <td class="py-2.5 px-3">
+                <div class="font-bold text-purple-300">Deep Representation</div>
+                <div class="text-[11px] text-slate-400">Neural Network (Multi-Layer Perceptron)</div>
+              </td>
+              <td class="py-2.5 px-3 text-purple-300 font-medium">Deep learning</td>
+              <td class="py-2.5 px-3 text-white font-semibold">Classification + Regression + Time Series</td>
+              <td class="py-2.5 px-3 text-slate-400 font-mono">4 lines (all 3 questions)</td>
             </tr>
           </tbody>
         </table>
 
-        <!-- Metric Table -->
+        <!-- Combined Metric Summary Table -->
         <div class="mt-4 pt-4 border-t border-slate-800">
-          <h3 class="font-bold text-slate-200 text-xs uppercase mb-2">Metrics Connections</h3>
+          <h3 class="font-bold text-slate-200 text-xs uppercase mb-2">Metrics Efficiency Consolidation</h3>
           <div class="grid grid-cols-2 gap-3 text-[11px]">
-            <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800">
-              <div class="font-bold text-emerald-400 mb-1">To Classification (Discrete Yes/No):</div>
+            <div class="bg-slate-950 p-2.5 rounded-lg border border-emerald-900/60">
+              <div class="font-bold text-emerald-400 mb-1 flex items-center justify-between">
+                <span>Classification Suite:</span>
+                <span class="text-[10px] text-emerald-300 font-mono">1 line (saves 5)</span>
+              </div>
+              <p class="text-slate-400 text-[10px] mb-2">All 6 metrics evaluate discrete classification:</p>
               <ul class="list-disc list-inside text-slate-300 space-y-0.5">
-                <li>Accuracy: <code class="text-slate-400">(TP + TN) / All</code></li>
-                <li>Precision: <code class="text-slate-400">TP / (TP + FP)</code></li>
-                <li>Recall: <code class="text-slate-400">TP / (TP + FN)</code></li>
-                <li>Specificity: <code class="text-slate-400">TN / (TN + FP)</code></li>
-                <li>NPV: <code class="text-slate-400">TN / (TN + FN)</code></li>
-                <li>F1-Score: <code class="text-slate-400">2*P*R / (P + R)</code></li>
+                <li><strong>Accuracy</strong> <code>(TP+TN)/all</code></li>
+                <li><strong>Precision</strong> <code>TP/(TP+FP)</code></li>
+                <li><strong>Recall</strong> <code>TP/(TP+FN)</code></li>
+                <li><strong>Specificity</strong> <code>TN/(TN+FP)</code></li>
+                <li><strong>NPV</strong> <code>TN/(TN+FN)</code></li>
+                <li><strong>F1-Score</strong> <code>2PR/(P+R)</code></li>
               </ul>
             </div>
-            <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800">
-              <div class="font-bold text-sky-400 mb-1">To Regression & Time Series (Continuous / Gap):</div>
+            <div class="bg-slate-950 p-2.5 rounded-lg border border-sky-900/60">
+              <div class="font-bold text-sky-400 mb-1 flex items-center justify-between">
+                <span>Continuous Error Suite:</span>
+                <span class="text-[10px] text-sky-300 font-mono">2 lines (saves 6)</span>
+              </div>
+              <p class="text-slate-400 text-[10px] mb-2">Evaluate continuous deviations (Regression & TS):</p>
               <ul class="list-disc list-inside text-slate-300 space-y-0.5">
-                <li>MAE: <code class="text-slate-400">avg(|gap|)</code></li>
-                <li>MSE: <code class="text-slate-400">avg(gap^2)</code></li>
-                <li>RMSE: <code class="text-slate-400">sqrt(MSE)</code></li>
-                <li>MAPE: <code class="text-slate-400">avg(|gap| / actual)</code></li>
-                <li>R²: <code class="text-slate-400">1 - (SS_res / SS_tot)</code> (Regression)</li>
+                <li><strong>MAE</strong> <code>avg(|gap|)</code> (Reg & TS)</li>
+                <li><strong>MSE</strong> <code>avg(gap^2)</code> (Reg & TS)</li>
+                <li><strong>RMSE</strong> <code>sqrt(MSE)</code> (Reg & TS)</li>
+                <li><strong>MAPE</strong> <code>avg(|gap|/y)</code> (Reg & TS)</li>
+                <li><strong>R²</strong> (1 line to Regression only)</li>
               </ul>
             </div>
           </div>
@@ -442,169 +491,9 @@
   </div>
 
   <script>
-    // Node definitions carefully spaced to ensure ZERO overlapping text or lines
-    const nodes = {
-      // 1. Central Core
-      root: { id: 'root', label: 'PREDICTION', category: 'root', x: 880, y: 550, w: 170, h: 50, sub: 'Central Concept' },
-
-      // 2. Primary 4 Hierarchy Branches
-      b_kq: { id: 'b_kq', label: 'Kind of question', category: 'branch', x: 500, y: 220, w: 175, h: 42, sub: '3 business goals' },
-      b_al: { id: 'b_al', label: 'Algorithms', category: 'branch', x: 500, y: 550, w: 150, h: 42, sub: 'Named methods' },
-      b_ft: { id: 'b_ft', label: 'Family of technique', category: 'branch', x: 500, y: 920, w: 180, h: 42, sub: '3 traditions' },
-      b_me: { id: 'b_me', label: 'Metrics', category: 'branch', x: 1240, y: 550, w: 140, h: 42, sub: 'Evaluation formulas' },
-
-      // 3. Kind of question sub-nodes (Top-Left)
-      kq_cls: { id: 'kq_cls', label: 'Classification', category: 'kq', x: 170, y: 140, w: 155, h: 38, desc: 'Which group/category does a row belong to? (e.g. Churn yes/no)' },
-      kq_reg: { id: 'kq_reg', label: 'Regression', category: 'kq', x: 170, y: 220, w: 155, h: 38, desc: 'What continuous number goes with this row? (e.g. House price, revenue)' },
-      kq_tsf: { id: 'kq_tsf', label: 'Time series forecasting', category: 'kq', x: 170, y: 300, w: 185, h: 38, desc: 'What comes next in chronological sequence? (e.g. Sales next March)' },
-
-      // 4. Family of technique sub-nodes (Bottom-Left)
-      ft_sta: { id: 'ft_sta', label: 'Statistics', category: 'ft', x: 170, y: 840, w: 145, h: 36, desc: 'Probabilistic models, parameter estimation, interpretable weights.' },
-      ft_ml:  { id: 'ft_ml',  label: 'Machine learning', category: 'ft', x: 170, y: 920, w: 165, h: 36, desc: 'Iterative optimization, splitting rules, margin boundaries, ensembles.' },
-      ft_dl:  { id: 'ft_dl',  label: 'Deep learning', category: 'ft', x: 170, y: 1000, w: 150, h: 36, desc: 'Multi-layer artificial neural networks learning representation hierarchies.' },
-
-      // 5. Algorithms sub-nodes (Middle-Left, neatly stacked in families)
-      // Statistics methods
-      al_lin: { id: 'al_lin', label: 'Linear Regression', category: 'al', x: 300, y: 400, w: 160, h: 32, family: 'Statistics', questions: ['Regression'], desc: 'Predicts continuous targets via weighted sum of features.' },
-      al_rg:  { id: 'al_rg',  label: 'Ridge / Lasso / Elastic Net', category: 'al', x: 300, y: 440, w: 195, h: 32, family: 'Statistics', questions: ['Regression'], desc: 'Regularized linear models with L2/L1 penalties.' },
-      al_log: { id: 'al_log', label: 'Logistic Regression', category: 'al', x: 300, y: 480, w: 160, h: 32, family: 'Statistics', questions: ['Classification'], desc: 'Outputs class probabilities using logistic sigmoid link.' },
-      al_nb:  { id: 'al_nb',  label: 'Naive Bayes', category: 'al', x: 300, y: 520, w: 140, h: 32, family: 'Statistics', questions: ['Classification'], desc: 'Probabilistic classifier multiplying independent feature likelihoods.' },
-      al_ari: { id: 'al_ari', label: 'ARIMA', category: 'al', x: 300, y: 560, w: 120, h: 32, family: 'Statistics', questions: ['Time series forecasting'], desc: 'Autoregressive Integrated Moving Average for temporal lags.' },
-
-      // Machine Learning methods
-      al_dt:  { id: 'al_dt',  label: 'Decision Tree', category: 'al', x: 300, y: 610, w: 145, h: 32, family: 'Machine learning', questions: ['Classification', 'Regression'], desc: 'Recursive conditional splits. Solves both Classification & Regression!' },
-      al_rf:  { id: 'al_rf',  label: 'Random Forest', category: 'al', x: 300, y: 650, w: 145, h: 32, family: 'Machine learning', questions: ['Classification', 'Regression'], desc: 'Ensemble of decorrelated bagged trees; accurate & stable.' },
-      al_gb:  { id: 'al_gb',  label: 'Gradient Boosting', category: 'al', x: 300, y: 690, w: 155, h: 32, family: 'Machine learning', questions: ['Classification', 'Regression'], desc: 'Sequential residual correction; highest accuracy on tabular data.' },
-      al_svm: { id: 'al_svm', label: 'Support Vector Machine', category: 'al', x: 300, y: 730, w: 185, h: 32, family: 'Machine learning', questions: ['Classification', 'Regression'], desc: 'Maximizes separating margin between classes.' },
-      al_knn: { id: 'al_knn', label: 'k-Nearest Neighbours', category: 'al', x: 300, y: 770, w: 175, h: 32, family: 'Machine learning', questions: ['Classification', 'Regression'], desc: 'Instance-based learner taking majority or average of k closest rows.' },
-
-      // Deep Learning methods
-      al_nn:  { id: 'al_nn',  label: 'Neural Network', category: 'al', x: 300, y: 820, w: 150, h: 32, family: 'Deep learning', questions: ['Classification', 'Regression', 'Time series forecasting'], desc: 'Layers of interconnected nodes with non-linear activation; handles any prediction.' },
-
-      // 6. Metrics sub-nodes (Right Side, neatly clustered)
-      // Classification metrics (Top-Right)
-      me_acc: { id: 'me_acc', label: 'Accuracy', category: 'me', x: 1550, y: 160, w: 110, h: 32, questions: ['Classification'], formula: '(TP + TN) / All' },
-      me_prc: { id: 'me_prc', label: 'Precision', category: 'me', x: 1550, y: 205, w: 110, h: 32, questions: ['Classification'], formula: 'TP / (TP + FP)' },
-      me_rec: { id: 'me_rec', label: 'Recall', category: 'me', x: 1550, y: 250, w: 100, h: 32, questions: ['Classification'], formula: 'TP / (TP + FN)' },
-      me_spf: { id: 'me_spf', label: 'Specificity', category: 'me', x: 1550, y: 295, w: 115, h: 32, questions: ['Classification'], formula: 'TN / (TN + FP)' },
-      me_npv: { id: 'me_npv', label: 'NPV', category: 'me', x: 1550, y: 340, w: 90, h: 32, questions: ['Classification'], formula: 'TN / (TN + FN)' },
-      me_f1:  { id: 'me_f1',  label: 'F1-Score', category: 'me', x: 1550, y: 385, w: 110, h: 32, questions: ['Classification'], formula: '2*P*R / (P + R)' },
-
-      // Continuous metrics (Bottom-Right)
-      me_mae: { id: 'me_mae', label: 'MAE', category: 'me', x: 1550, y: 680, w: 90, h: 32, questions: ['Regression', 'Time series forecasting'], formula: 'avg(|gap|)' },
-      me_mse: { id: 'me_mse', label: 'MSE', category: 'me', x: 1550, y: 725, w: 90, h: 32, questions: ['Regression', 'Time series forecasting'], formula: 'avg(gap^2)' },
-      me_rms: { id: 'me_rms', label: 'RMSE', category: 'me', x: 1550, y: 770, w: 100, h: 32, questions: ['Regression', 'Time series forecasting'], formula: 'sqrt(MSE)' },
-      me_map: { id: 'me_map', label: 'MAPE', category: 'me', x: 1550, y: 815, w: 100, h: 32, questions: ['Regression', 'Time series forecasting'], formula: 'avg(|gap| / actual)' },
-      me_r2:  { id: 'me_r2',  label: 'R² (R-Squared)', category: 'me', x: 1550, y: 860, w: 130, h: 32, questions: ['Regression'], formula: '1 - (SS_res / SS_tot)' },
-    };
-
-    // Solid hierarchy branches radiating from Root PREDICTION
-    const solidBranches = [
-      { from: 'root', to: 'b_kq' },
-      { from: 'root', to: 'b_al' },
-      { from: 'root', to: 'b_ft' },
-      { from: 'root', to: 'b_me' },
-
-      // Children of Kind of question
-      { from: 'b_kq', to: 'kq_cls' },
-      { from: 'b_kq', to: 'kq_reg' },
-      { from: 'b_kq', to: 'kq_tsf' },
-
-      // Children of Family of technique
-      { from: 'b_ft', to: 'ft_sta' },
-      { from: 'b_ft', to: 'ft_ml' },
-      { from: 'b_ft', to: 'ft_dl' },
-
-      // Children of Algorithms
-      { from: 'b_al', to: 'al_lin' },
-      { from: 'b_al', to: 'al_rg' },
-      { from: 'b_al', to: 'al_log' },
-      { from: 'b_al', to: 'al_nb' },
-      { from: 'b_al', to: 'al_ari' },
-      { from: 'b_al', to: 'al_dt' },
-      { from: 'b_al', to: 'al_rf' },
-      { from: 'b_al', to: 'al_gb' },
-      { from: 'b_al', to: 'al_svm' },
-      { from: 'b_al', to: 'al_knn' },
-      { from: 'b_al', to: 'al_nn' },
-
-      // Children of Metrics
-      { from: 'b_me', to: 'me_acc' },
-      { from: 'b_me', to: 'me_prc' },
-      { from: 'b_me', to: 'me_rec' },
-      { from: 'b_me', to: 'me_spf' },
-      { from: 'b_me', to: 'me_npv' },
-      { from: 'b_me', to: 'me_f1' },
-      { from: 'b_me', to: 'me_mae' },
-      { from: 'b_me', to: 'me_mse' },
-      { from: 'b_me', to: 'me_rms' },
-      { from: 'b_me', to: 'me_map' },
-      { from: 'b_me', to: 'me_r2' },
-    ];
-
-    // All dashed joins strictly mapped
-    const dashedJoins = [
-      // 1. Algorithms to Family (Orange - isolated on outer/left channel)
-      { id: 'j_lin_sta', type: 'algo-fam', from: 'al_lin', to: 'ft_sta', channel: 'left' },
-      { id: 'j_rg_sta',  type: 'algo-fam', from: 'al_rg',  to: 'ft_sta', channel: 'left' },
-      { id: 'j_log_sta', type: 'algo-fam', from: 'al_log', to: 'ft_sta', channel: 'left' },
-      { id: 'j_nb_sta',  type: 'algo-fam', from: 'al_nb',  to: 'ft_sta', channel: 'left' },
-      { id: 'j_ari_sta', type: 'algo-fam', from: 'al_ari', to: 'ft_sta', channel: 'left' },
-
-      { id: 'j_dt_ml',   type: 'algo-fam', from: 'al_dt',  to: 'ft_ml',  channel: 'left' },
-      { id: 'j_rf_ml',   type: 'algo-fam', from: 'al_rf',  to: 'ft_ml',  channel: 'left' },
-      { id: 'j_gb_ml',   type: 'algo-fam', from: 'al_gb',  to: 'ft_ml',  channel: 'left' },
-      { id: 'j_svm_ml',  type: 'algo-fam', from: 'al_svm', to: 'ft_ml',  channel: 'left' },
-      { id: 'j_knn_ml',  type: 'algo-fam', from: 'al_knn', to: 'ft_ml',  channel: 'left' },
-
-      { id: 'j_nn_dl',   type: 'algo-fam', from: 'al_nn',  to: 'ft_dl',  channel: 'left' },
-
-      // 2. Algorithms to Questions (Blue - isolated on inner-left channel)
-      { id: 'j_lin_reg', type: 'algo-kq', from: 'al_lin', to: 'kq_reg', channel: 'left' },
-      { id: 'j_rg_reg',  type: 'algo-kq', from: 'al_rg',  to: 'kq_reg', channel: 'left' },
-      { id: 'j_log_cls', type: 'algo-kq', from: 'al_log', to: 'kq_cls', channel: 'left' },
-      { id: 'j_nb_cls',  type: 'algo-kq', from: 'al_nb',  to: 'kq_cls', channel: 'left' },
-      { id: 'j_ari_tsf', type: 'algo-kq', from: 'al_ari', to: 'kq_tsf', channel: 'left' },
-
-      { id: 'j_dt_cls',  type: 'algo-kq', from: 'al_dt',  to: 'kq_cls', channel: 'left' },
-      { id: 'j_dt_reg',  type: 'algo-kq', from: 'al_dt',  to: 'kq_reg', channel: 'left' },
-
-      { id: 'j_rf_cls',  type: 'algo-kq', from: 'al_rf',  to: 'kq_cls', channel: 'left' },
-      { id: 'j_rf_reg',  type: 'algo-kq', from: 'al_rf',  to: 'kq_reg', channel: 'left' },
-      { id: 'j_gb_cls',  type: 'algo-kq', from: 'al_gb',  to: 'kq_cls', channel: 'left' },
-      { id: 'j_gb_reg',  type: 'algo-kq', from: 'al_gb',  to: 'kq_reg', channel: 'left' },
-      { id: 'j_svm_cls', type: 'algo-kq', from: 'al_svm', to: 'kq_cls', channel: 'left' },
-      { id: 'j_svm_reg', type: 'algo-kq', from: 'al_svm', to: 'kq_reg', channel: 'left' },
-      { id: 'j_knn_cls', type: 'algo-kq', from: 'al_knn', to: 'kq_cls', channel: 'left' },
-      { id: 'j_knn_reg', type: 'algo-kq', from: 'al_knn', to: 'kq_reg', channel: 'left' },
-
-      { id: 'j_nn_cls',  type: 'algo-kq', from: 'al_nn',  to: 'kq_cls', channel: 'left' },
-      { id: 'j_nn_reg',  type: 'algo-kq', from: 'al_nn',  to: 'kq_reg', channel: 'left' },
-      { id: 'j_nn_tsf',  type: 'algo-kq', from: 'al_nn',  to: 'kq_tsf', channel: 'left' },
-
-      // 3. Metrics to Questions (Overhead High Arc route - does not cut through center!)
-      { id: 'j_acc_cls', type: 'metric-kq', from: 'me_acc', to: 'kq_cls', channel: 'overhead' },
-      { id: 'j_prc_cls', type: 'metric-kq', from: 'me_prc', to: 'kq_cls', channel: 'overhead' },
-      { id: 'j_rec_cls', type: 'metric-kq', from: 'me_rec', to: 'kq_cls', channel: 'overhead' },
-      { id: 'j_spf_cls', type: 'metric-kq', from: 'me_spf', to: 'kq_cls', channel: 'overhead' },
-      { id: 'j_npv_cls', type: 'metric-kq', from: 'me_npv', to: 'kq_cls', channel: 'overhead' },
-      { id: 'j_f1_cls',  type: 'metric-kq', from: 'me_f1',  to: 'kq_cls', channel: 'overhead' },
-
-      { id: 'j_mae_reg', type: 'metric-kq', from: 'me_mae', to: 'kq_reg', channel: 'overhead' },
-      { id: 'j_mse_reg', type: 'metric-kq', from: 'me_mse', to: 'kq_reg', channel: 'overhead' },
-      { id: 'j_rms_reg', type: 'metric-kq', from: 'me_rms', to: 'kq_reg', channel: 'overhead' },
-      { id: 'j_map_reg', type: 'metric-kq', from: 'me_map', to: 'kq_reg', channel: 'overhead' },
-      { id: 'j_r2_reg',  type: 'metric-kq', from: 'me_r2',  to: 'kq_reg', channel: 'overhead' },
-
-      { id: 'j_mae_tsf', type: 'metric-kq', from: 'me_mae', to: 'kq_tsf', channel: 'overhead' },
-      { id: 'j_mse_tsf', type: 'metric-kq', from: 'me_mse', to: 'kq_tsf', channel: 'overhead' },
-      { id: 'j_rms_tsf', type: 'metric-kq', from: 'me_rms', to: 'kq_tsf', channel: 'overhead' },
-      { id: 'j_map_tsf', type: 'metric-kq', from: 'me_map', to: 'kq_tsf', channel: 'overhead' },
-    ];
-  </script>
-
-  <script>
-    let currentMode = 'focus'; // 'focus', 'wizard', 'all'
+    // State management
+    let groupingMode = 'combined'; // 'combined' (default efficient) or 'granular'
+    let isWalkthrough = false;
     let wizardStep = 1;
     let selectedNodeId = null;
     let hoveredNodeId = null;
@@ -625,76 +514,228 @@
       'metric-kq': '#34d399', // Emerald
     };
 
-    // Helper: Compute non-intersecting curved paths
-    function calculateSmartPath(join) {
-      const src = nodes[join.from];
-      const dst = nodes[join.to];
+    // COMBINED DATASET: Items sharing identical connection paths are unified into clean bracket clusters
+    const combinedNodes = {
+      root: { id: 'root', label: 'PREDICTION', sub: 'Central Concept', category: 'root', x: 880, y: 550, w: 170, h: 50 },
 
-      // ROUTE 1: Overhead Arc (Metrics to Questions)
-      // Arcs ABOVE all central nodes to prevent cutting across the middle
+      // Branches
+      b_kq: { id: 'b_kq', label: 'Kind of question', sub: '3 business targets', category: 'branch', x: 500, y: 220, w: 175, h: 42 },
+      b_al: { id: 'b_al', label: 'Algorithms', sub: 'Named method clusters', category: 'branch', x: 500, y: 550, w: 160, h: 42 },
+      b_ft: { id: 'b_ft', label: 'Family of technique', sub: '3 traditions', category: 'branch', x: 500, y: 880, w: 180, h: 42 },
+      b_me: { id: 'b_me', label: 'Metrics', sub: 'Evaluation suites', category: 'branch', x: 1240, y: 550, w: 150, h: 42 },
+
+      // Kind of Question (Top-Left)
+      kq_cls: { id: 'kq_cls', label: 'Classification', category: 'kq', x: 170, y: 140, w: 155, h: 40, desc: 'Which group/category does a row belong to? (e.g. Churn yes/no)' },
+      kq_reg: { id: 'kq_reg', label: 'Regression', category: 'kq', x: 170, y: 220, w: 155, h: 40, desc: 'What continuous number goes with this row? (e.g. House price, revenue)' },
+      kq_tsf: { id: 'kq_tsf', label: 'Time series forecasting', category: 'kq', x: 170, y: 300, w: 185, h: 40, desc: 'What comes next in chronological sequence? (e.g. Sales next March)' },
+
+      // Family of Technique (Bottom-Left)
+      ft_sta: { id: 'ft_sta', label: 'Statistics', category: 'ft', x: 170, y: 800, w: 145, h: 38, desc: 'Probabilistic models, parameter estimation, interpretable weights.' },
+      ft_ml:  { id: 'ft_ml',  label: 'Machine learning', category: 'ft', x: 170, y: 880, w: 165, h: 38, desc: 'Iterative optimization, recursive splitting rules, margin boundaries.' },
+      ft_dl:  { id: 'ft_dl',  label: 'Deep learning', category: 'ft', x: 170, y: 960, w: 150, h: 38, desc: 'Multi-layer artificial neural networks learning representation hierarchies.' },
+
+      // COMBINED ALGORITHM CLUSTERS (Middle-Left)
+      al_linear: {
+        id: 'al_linear',
+        label: 'Linear & Regularized Models',
+        subtext: 'Linear Reg • Ridge • Lasso • Elastic Net',
+        category: 'al',
+        x: 320, y: 400, w: 230, h: 50,
+        family: 'Statistics',
+        questions: ['Regression'],
+        desc: 'Group of 4 linear methods predicting continuous numbers via feature weights. (Saves 6 redundant lines!)'
+      },
+      al_prob: {
+        id: 'al_prob',
+        label: 'Probabilistic Classifiers',
+        subtext: 'Logistic Regression • Naive Bayes',
+        category: 'al',
+        x: 320, y: 470, w: 220, h: 48,
+        family: 'Statistics',
+        questions: ['Classification'],
+        desc: 'Statistical methods producing class probabilities (sigmoid link or Bayes theorem). (Saves 2 redundant lines!)'
+      },
+      al_ts: {
+        id: 'al_ts',
+        label: 'Temporal Sequence Model',
+        subtext: 'ARIMA (Autoregressive Int. Moving Avg)',
+        category: 'al',
+        x: 320, y: 535, w: 230, h: 46,
+        family: 'Statistics',
+        questions: ['Time series forecasting'],
+        desc: 'Specialized statistical model leveraging temporal lags and differencing for chronological forecasts.'
+      },
+      al_tree: {
+        id: 'al_tree',
+        label: 'Tree Models & Ensembles',
+        subtext: 'Decision Tree • Random Forest • Gradient Boost',
+        category: 'al',
+        x: 320, y: 605, w: 250, h: 52,
+        family: 'Machine learning',
+        questions: ['Classification', 'Regression'],
+        desc: 'Recursive partitioning and bagging/boosting ensembles. Solves BOTH Classification and Regression!'
+      },
+      al_geom: {
+        id: 'al_geom',
+        label: 'Margin & Distance ML',
+        subtext: 'Support Vector Machine (SVM) • k-NN',
+        category: 'al',
+        x: 320, y: 675, w: 230, h: 50,
+        family: 'Machine learning',
+        questions: ['Classification', 'Regression'],
+        desc: 'Geometric separating boundaries (SVM) and local neighborhood voting/averaging (k-NN).'
+      },
+      al_nn: {
+        id: 'al_nn',
+        label: 'Deep Representation',
+        subtext: 'Neural Network (Multi-Layer Perceptron)',
+        category: 'al',
+        x: 320, y: 745, w: 240, h: 52,
+        family: 'Deep learning',
+        questions: ['Classification', 'Regression', 'Time series forecasting'],
+        desc: 'Layers of interconnected nodes with non-linear activation; universal approximator across all 3 problem types.'
+      },
+
+      // COMBINED METRIC SUITES (Right Side)
+      me_cls_suite: {
+        id: 'me_cls_suite',
+        label: 'Classification Metric Suite',
+        subtext: 'Accuracy • Precision • Recall • Specificity • NPV • F1',
+        category: 'me',
+        x: 1530, y: 280, w: 290, h: 68,
+        questions: ['Classification'],
+        desc: 'All 6 metrics derived from the confusion matrix (TP, TN, FP, FN) evaluating discrete class outcomes. Connected via 1 overhead line!'
+      },
+      me_err_suite: {
+        id: 'me_err_suite',
+        label: 'Continuous Error Suite',
+        subtext: 'MAE • MSE • RMSE • MAPE',
+        category: 'me',
+        x: 1530, y: 680, w: 270, h: 60,
+        questions: ['Regression', 'Time series forecasting'],
+        desc: 'Summary statistics of gap = |actual - predicted|. Evaluates both Regression and Time Series Forecasting.'
+      },
+      me_r2: {
+        id: 'me_r2',
+        label: 'Variance Explained (R²)',
+        subtext: 'Coefficient of Determination (1 - SSres/SStot)',
+        category: 'me',
+        x: 1530, y: 780, w: 250, h: 48,
+        questions: ['Regression'],
+        desc: 'Proportion of variance explained by features. Specific to cross-sectional Regression.'
+      }
+    };
+
+    // COMBINED RELATIONAL JOINS: Only 18 total lines!
+    const combinedDashedJoins = [
+      // Algo Clusters -> Family (Orange Left Outer Margin)
+      { id: 'cj_lin_sta', type: 'algo-fam', from: 'al_linear', to: 'ft_sta', channel: 'left' },
+      { id: 'cj_prob_sta', type: 'algo-fam', from: 'al_prob', to: 'ft_sta', channel: 'left' },
+      { id: 'cj_ts_sta',   type: 'algo-fam', from: 'al_ts',   to: 'ft_sta', channel: 'left' },
+      { id: 'cj_tree_ml',  type: 'algo-fam', from: 'al_tree', to: 'ft_ml',  channel: 'left' },
+      { id: 'cj_geom_ml',  type: 'algo-fam', from: 'al_geom', to: 'ft_ml',  channel: 'left' },
+      { id: 'cj_nn_dl',    type: 'algo-fam', from: 'al_nn',   to: 'ft_dl',  channel: 'left' },
+
+      // Algo Clusters -> Questions (Blue Left Inner Margin)
+      { id: 'cj_lin_reg',  type: 'algo-kq',  from: 'al_linear', to: 'kq_reg', channel: 'left' },
+      { id: 'cj_prob_cls', type: 'algo-kq',  from: 'al_prob',   to: 'kq_cls', channel: 'left' },
+      { id: 'cj_ts_tsf',   type: 'algo-kq',  from: 'al_ts',     to: 'kq_tsf', channel: 'left' },
+      { id: 'cj_tree_cls', type: 'algo-kq',  from: 'al_tree',   to: 'kq_cls', channel: 'left' },
+      { id: 'cj_tree_reg', type: 'algo-kq',  from: 'al_tree',   to: 'kq_reg', channel: 'left' },
+      { id: 'cj_geom_cls', type: 'algo-kq',  from: 'al_geom',   to: 'kq_cls', channel: 'left' },
+      { id: 'cj_geom_reg', type: 'algo-kq',  from: 'al_geom',   to: 'kq_reg', channel: 'left' },
+      { id: 'cj_nn_cls',   type: 'algo-kq',  from: 'al_nn',     to: 'kq_cls', channel: 'left' },
+      { id: 'cj_nn_reg',   type: 'algo-kq',  from: 'al_nn',     to: 'kq_reg', channel: 'left' },
+      { id: 'cj_nn_tsf',   type: 'algo-kq',  from: 'al_nn',     to: 'kq_tsf', channel: 'left' },
+
+      // Metric Suites -> Questions (Overhead High Arc Channel)
+      { id: 'cj_cls_suite', type: 'metric-kq', from: 'me_cls_suite', to: 'kq_cls', channel: 'overhead', apexOffset: 60 },
+      { id: 'cj_err_reg',   type: 'metric-kq', from: 'me_err_suite', to: 'kq_reg', channel: 'overhead', apexOffset: 85 },
+      { id: 'cj_err_tsf',   type: 'metric-kq', from: 'me_err_suite', to: 'kq_tsf', channel: 'overhead', apexOffset: 110 },
+      { id: 'cj_r2_reg',    type: 'metric-kq', from: 'me_r2',        to: 'kq_reg', channel: 'overhead', apexOffset: 135 },
+    ];
+
+    // Solid hierarchy branches for combined view
+    const combinedSolidBranches = [
+      { from: 'root', to: 'b_kq' },
+      { from: 'root', to: 'b_al' },
+      { from: 'root', to: 'b_ft' },
+      { from: 'root', to: 'b_me' },
+      { from: 'b_kq', to: 'kq_cls' },
+      { from: 'b_kq', to: 'kq_reg' },
+      { from: 'b_kq', to: 'kq_tsf' },
+      { from: 'b_ft', to: 'ft_sta' },
+      { from: 'b_ft', to: 'ft_ml' },
+      { from: 'b_ft', to: 'ft_dl' },
+      { from: 'b_al', to: 'al_linear' },
+      { from: 'b_al', to: 'al_prob' },
+      { from: 'b_al', to: 'al_ts' },
+      { from: 'b_al', to: 'al_tree' },
+      { from: 'b_al', to: 'al_geom' },
+      { from: 'b_al', to: 'al_nn' },
+      { from: 'b_me', to: 'me_cls_suite' },
+      { from: 'b_me', to: 'me_err_suite' },
+      { from: 'b_me', to: 'me_r2' },
+    ];
+
+    // EFFICIENT DRAWING WALKTHROUGH STEPS (11 Steps instead of 18)
+    const combinedWizardSteps = [
+      { id: 'cw_1', title: '1. Root Box: PREDICTION', node: 'root', action: 'Draw a rectangle in the center of your sheet labeled PREDICTION.' },
+      { id: 'cw_2', title: '2. Four Primary Branches', branch: 'all_branches', action: 'Draw the 4 solid radiating branches: Kind of question (top-left), Algorithms (mid-left), Family of technique (bottom-left), and Metrics (right).' },
+      { id: 'cw_3', title: '3. Kind of Question (3 Sub-Nodes)', branch: 'kq', action: 'Write Classification, Regression, and Time series forecasting at the top left.' },
+      { id: 'cw_4', title: '4. Family of Technique (3 Sub-Nodes)', branch: 'ft', action: 'Write Statistics, Machine learning, and Deep learning at the bottom left.' },
+      { id: 'cw_5', title: '5. Metrics Suites (3 Bracket Boxes)', branch: 'me', action: 'On the right side, draw 3 boxes: Classification Suite on top, Continuous Error Suite in the middle, and R² below.' },
+      { id: 'cw_6', title: '6. Linear & Regularized Cluster', node: 'al_linear', action: 'Draw bracket [Linear, Ridge, Lasso, Elastic Net]. Connect 1 line to Statistics and 1 line to Regression.' },
+      { id: 'cw_7', title: '7. Probabilistic Classifiers Cluster', node: 'al_prob', action: 'Draw bracket [Logistic Regression, Naive Bayes]. Connect 1 line to Statistics and 1 line to Classification.' },
+      { id: 'cw_8', title: '8. ARIMA (Temporal Lags)', node: 'al_ts', action: 'Draw ARIMA. Connect 1 line to Statistics and 1 line to Time series forecasting.' },
+      { id: 'cw_9', title: '9. Tree & Ensemble Cluster', node: 'al_tree', action: 'Draw bracket [Decision Tree, Random Forest, Gradient Boost]. Connect to Machine Learning, and pull 2 lines: to Classification AND Regression!' },
+      { id: 'cw_10', title: '10. Margin & Distance ML Cluster', node: 'al_geom', action: 'Draw bracket [SVM, k-NN]. Connect to Machine Learning, and pull lines to Classification & Regression.' },
+      { id: 'cw_11', title: '11. Deep Neural Network', node: 'al_nn', action: 'Draw Neural Network. Connect to Deep Learning, and link to ALL 3 questions (Cls, Reg, Time Series).' },
+      { id: 'cw_12', title: '12. Classification Metrics Highway', node: 'me_cls_suite', action: 'Draw ONE overhead arch from the Classification Suite directly to Classification.' },
+      { id: 'cw_13', title: '13. Continuous Error Highways', node: 'me_err_suite', action: 'Draw 2 overhead arches from Continuous Error Suite to Regression and Time Series Forecasting (plus 1 line from R² to Regression).' },
+    ];
+
+    function calculateSmartPath(join, activeNodes) {
+      const src = activeNodes[join.from];
+      const dst = activeNodes[join.to];
+      if (!src || !dst) return '';
+
+      // Route 1: Overhead Arc (Metrics to Questions)
       if (join.channel === 'overhead') {
-        const x1 = src.x - src.w / 2; // Exit left side of metric
+        const x1 = src.x - src.w / 2;
         const y1 = src.y;
-        const x2 = dst.x + dst.w / 2; // Enter right side of question
+        const x2 = dst.x + dst.w / 2;
         const y2 = dst.y;
-
-        // Spread the apex height based on metric index to avoid bundle overlap
-        const idx = Object.keys(nodes).indexOf(src.id);
-        const arcApexY = 50 + (idx % 8) * 12; // High overhead channel between Y=50 and Y=140
-
-        return `M ${x1} ${y1} C ${x1 - 180} ${arcApexY}, ${x2 + 220} ${arcApexY}, ${x2} ${y2}`;
+        const apexY = join.apexOffset || 70;
+        return `M ${x1} ${y1} C ${x1 - 220} ${apexY}, ${x2 + 200} ${apexY}, ${x2} ${y2}`;
       }
 
-      // ROUTE 2: Left-side Algorithm to Family (Downwards arc on left margin)
+      // Route 2: Algorithm Cluster to Family (Downward Left Arc)
       if (join.type === 'algo-fam') {
-        const x1 = src.x - src.w / 2; // Left side of algorithm box
+        const x1 = src.x - src.w / 2;
         const y1 = src.y;
-        const x2 = dst.x + dst.w / 2; // Right side of family box
+        const x2 = dst.x + dst.w / 2;
         const y2 = dst.y;
-
-        const curveOffset = Math.min(x1, x2) - 60; // Curve out to the left
+        const curveOffset = Math.min(x1, x2) - 55;
         return `M ${x1} ${y1} C ${curveOffset} ${y1}, ${curveOffset} ${y2}, ${x2} ${y2}`;
       }
 
-      // ROUTE 3: Left-side Algorithm to Question (Upwards arc on left margin)
+      // Route 3: Algorithm Cluster to Question (Upward Left Arc)
       if (join.type === 'algo-kq') {
-        const x1 = src.x - src.w / 2; // Left side of algorithm box
+        const x1 = src.x - src.w / 2;
         const y1 = src.y;
-        const x2 = dst.x + dst.w / 2; // Right side of question box
+        const x2 = dst.x + dst.w / 2;
         const y2 = dst.y;
-
         const curveOffset = Math.min(x1, x2) - 40;
         return `M ${x1} ${y1} C ${curveOffset} ${y1}, ${curveOffset} ${y2}, ${x2} ${y2}`;
       }
 
-      // Default smooth S-curve
+      // Default S-Curve
       const x1 = src.x < dst.x ? src.x + src.w / 2 : src.x - src.w / 2;
       const x2 = src.x < dst.x ? dst.x - dst.w / 2 : dst.x + dst.w / 2;
       const dx = (x2 - x1) * 0.45;
       return `M ${x1} ${src.y} C ${x1 + dx} ${src.y}, ${x2 - dx} ${dst.y}, ${x2} ${dst.y}`;
     }
-
-    // Wizard Steps Definition for Drawing Walkthrough
-    const wizardSteps = [
-      { id: 'step_root', title: '1. Root Box: PREDICTION', node: 'root', action: 'Draw a rectangle in the center of your paper and write PREDICTION in bold capital letters.' },
-      { id: 'step_branches', title: '2. Four Main Branches', branch: 'all_branches', action: 'Draw 4 solid branches radiating outward: Kind of question (top-left), Algorithms (mid-left), Family of technique (bottom-left), and Metrics (right).' },
-      { id: 'step_kq', title: '3. Kind of Question Sub-Nodes', branch: 'kq', action: 'Under Kind of question, draw 3 boxes: Classification, Regression, and Time series forecasting.' },
-      { id: 'step_ft', title: '4. Family of Technique Sub-Nodes', branch: 'ft', action: 'Under Family of technique, draw 3 boxes: Statistics, Machine learning, and Deep learning.' },
-      { id: 'step_me', title: '5. Metrics Sub-Nodes', branch: 'me', action: 'Under Metrics on the right side, write the Classification metrics on top and Continuous error metrics below.' },
-      { id: 'step_lin', title: '6. Linear Regression', node: 'al_lin', action: 'Connect Linear Regression to Statistics (Family) and Regression (Question).' },
-      { id: 'step_rg',  title: '7. Ridge / Lasso / Elastic Net', node: 'al_rg', action: 'Connect Ridge/Lasso to Statistics (Family) and Regression (Question).' },
-      { id: 'step_log', title: '8. Logistic Regression', node: 'al_log', action: 'Connect Logistic Regression to Statistics (Family) and Classification (Question).' },
-      { id: 'step_nb',  title: '9. Naive Bayes', node: 'al_nb', action: 'Connect Naive Bayes to Statistics (Family) and Classification (Question).' },
-      { id: 'step_ari', title: '10. ARIMA', node: 'al_ari', action: 'Connect ARIMA to Statistics (Family) and Time series forecasting (Question).' },
-      { id: 'step_dt',  title: '11. Decision Tree (Important!)', node: 'al_dt', action: 'Connect Decision Tree to Machine learning, then draw TWO question lines: one to Classification AND one to Regression!' },
-      { id: 'step_rf',  title: '12. Random Forest', node: 'al_rf', action: 'Connect Random Forest to Machine learning, and link to both Classification and Regression.' },
-      { id: 'step_gb',  title: '13. Gradient Boosting', node: 'al_gb', action: 'Connect Gradient Boosting to Machine learning, and link to both Classification and Regression.' },
-      { id: 'step_svm', title: '14. Support Vector Machine', node: 'al_svm', action: 'Connect SVM to Machine learning, and link to both Classification and Regression.' },
-      { id: 'step_knn', title: '15. k-Nearest Neighbours', node: 'al_knn', action: 'Connect KNN to Machine learning, and link to both Classification and Regression.' },
-      { id: 'step_nn',  title: '16. Neural Network', node: 'al_nn', action: 'Connect Neural Network to Deep learning, and draw THREE lines to ALL 3 questions (Cls, Reg, Time Series).' },
-      { id: 'step_me_cls', title: '17. Classification Metrics Joins', metricGroup: 'cls', action: 'Draw overhead lines from Accuracy, Precision, Recall, Specificity, NPV, and F1 to Classification.' },
-      { id: 'step_me_reg', title: '18. Regression & TS Metrics Joins', metricGroup: 'reg', action: 'Draw lines from MAE, MSE, RMSE, MAPE, and R² to Regression (and MAE/MSE/RMSE to Time Series).' },
-    ];
 
     function renderCanvas() {
       const solidGroup = document.getElementById('solid-branches-group');
@@ -707,16 +748,22 @@
       overheadGroup.innerHTML = '';
       nodesGroup.innerHTML = '';
 
-      // 1. Render Solid Mind Map Branches
-      solidBranches.forEach(branch => {
-        const src = nodes[branch.from];
-        const dst = nodes[branch.to];
+      const activeNodes = (groupingMode === 'combined') ? combinedNodes : nodes;
+      const activeBranches = (groupingMode === 'combined') ? combinedSolidBranches : solidBranches;
+      const activeDashedJoins = (groupingMode === 'combined') ? combinedDashedJoins : dashedJoins;
+      const activeSteps = (groupingMode === 'combined') ? combinedWizardSteps : wizardSteps;
+
+      // 1. Render Solid Branches
+      activeBranches.forEach(branch => {
+        const src = activeNodes[branch.from];
+        const dst = activeNodes[branch.to];
+        if (!src || !dst) return;
 
         const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         const x1 = src.x < dst.x ? src.x + src.w / 2 : src.x - src.w / 2;
         const x2 = src.x < dst.x ? dst.x - dst.w / 2 : dst.x + dst.w / 2;
         const dx = (x2 - x1) * 0.4;
-        
+
         pathEl.setAttribute('d', `M ${x1} ${src.y} C ${x1 + dx} ${src.y}, ${x2 - dx} ${dst.y}, ${x2} ${dst.y}`);
         pathEl.setAttribute('stroke', branch.from === 'root' ? '#94a3b8' : '#334155');
         pathEl.setAttribute('stroke-width', branch.from === 'root' ? '2.5' : '1.75');
@@ -725,47 +772,44 @@
         solidGroup.appendChild(pathEl);
       });
 
-      // 2. Render Dashed Relational Joins
-      dashedJoins.forEach(join => {
+      // 2. Render Dashed Relational Highway Joins
+      activeDashedJoins.forEach(join => {
         const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        pathEl.setAttribute('d', calculateSmartPath(join));
+        pathEl.setAttribute('d', calculateSmartPath(join, activeNodes));
         pathEl.setAttribute('stroke', joinColors[join.type]);
-        pathEl.setAttribute('stroke-width', '2');
+        pathEl.setAttribute('stroke-width', '2.25');
         pathEl.setAttribute('stroke-dasharray', '5 4');
         pathEl.setAttribute('fill', 'none');
         pathEl.setAttribute('class', `join-line join-${join.from} join-${join.to}`);
         pathEl.id = `line-${join.id}`;
-        pathEl.dataset.from = join.from;
-        pathEl.dataset.to = join.to;
-        pathEl.dataset.type = join.type;
 
-        // Apply visibility logic
-        let shouldShow = false;
-        if (currentMode === 'all') {
-          shouldShow = true;
-          pathEl.setAttribute('opacity', '0.45');
-        } else if (currentMode === 'focus') {
-          const activeTarget = selectedNodeId || hoveredNodeId;
-          if (activeTarget && (join.from === activeTarget || join.to === activeTarget)) {
-            shouldShow = true;
-            pathEl.classList.add('highlighted');
-          } else {
-            shouldShow = false; // Hidden in Clean Focus Mode until interacted!
-          }
-        } else if (currentMode === 'wizard') {
-          const stepObj = wizardSteps[wizardStep - 1];
-          if (stepObj.node && (join.from === stepObj.node || join.to === stepObj.node)) {
-            shouldShow = true;
-            pathEl.classList.add('highlighted');
-          } else if (stepObj.metricGroup === 'cls' && join.type === 'metric-kq' && ['me_acc', 'me_prc', 'me_rec', 'me_spf', 'me_npv', 'me_f1'].includes(join.from)) {
-            shouldShow = true;
-            pathEl.classList.add('highlighted');
-          } else if (stepObj.metricGroup === 'reg' && join.type === 'metric-kq' && ['me_mae', 'me_mse', 'me_rms', 'me_map', 'me_r2'].includes(join.from)) {
-            shouldShow = true;
-            pathEl.classList.add('highlighted');
+        let shouldShow = true;
+        let isHighlighted = false;
+
+        if (isWalkthrough) {
+          const stepObj = activeSteps[wizardStep - 1];
+          if (stepObj && stepObj.node && (join.from === stepObj.node || join.to === stepObj.node)) {
+            isHighlighted = true;
           } else {
             shouldShow = false;
           }
+        } else {
+          // Normal mode: Show all lines softly, pop active/hovered node
+          const activeTarget = selectedNodeId || hoveredNodeId;
+          if (activeTarget) {
+            if (join.from === activeTarget || join.to === activeTarget) {
+              isHighlighted = true;
+              pathEl.setAttribute('opacity', '1');
+            } else {
+              pathEl.setAttribute('opacity', '0.08');
+            }
+          } else {
+            pathEl.setAttribute('opacity', '0.65');
+          }
+        }
+
+        if (isHighlighted) {
+          pathEl.classList.add('highlighted');
         }
 
         if (shouldShow) {
@@ -777,32 +821,27 @@
         }
       });
 
-      // 3. Render Node Boxes
-      Object.values(nodes).forEach(node => {
+      // 3. Render Node Boxes with Multi-line Labels for Clusters
+      Object.values(activeNodes).forEach(node => {
         const style = categoryStyles[node.category] || categoryStyles.branch;
         const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         g.setAttribute('class', 'map-node');
         g.setAttribute('id', `node-${node.id}`);
         g.setAttribute('transform', `translate(${node.x}, ${node.y})`);
 
-        // Dimming / Highlighting check in Wizard Mode
-        if (currentMode === 'wizard') {
-          const stepObj = wizardSteps[wizardStep - 1];
+        if (isWalkthrough) {
+          const stepObj = activeSteps[wizardStep - 1];
           let isActive = false;
-          if (stepObj.node === node.id) isActive = true;
-          if (stepObj.branch === 'all_branches' && (node.category === 'root' || node.category === 'branch')) isActive = true;
-          if (stepObj.branch === node.category) isActive = true;
-          if (stepObj.metricGroup && node.category === 'me') isActive = true;
+          if (stepObj && stepObj.node === node.id) isActive = true;
+          if (stepObj && stepObj.branch === 'all_branches' && (node.category === 'root' || node.category === 'branch')) isActive = true;
+          if (stepObj && stepObj.branch === node.category) isActive = true;
 
-          // Also highlight targets connected to this active step
-          const relevantJoins = dashedJoins.filter(j => 
-            (stepObj.node && (j.from === stepObj.node || j.to === stepObj.node))
-          );
+          const relevantJoins = activeDashedJoins.filter(j => stepObj && stepObj.node && (j.from === stepObj.node || j.to === stepObj.node));
           relevantJoins.forEach(j => {
             if (j.from === node.id || j.to === node.id) isActive = true;
           });
 
-          if (!isActive && stepObj.node) {
+          if (!isActive && stepObj && stepObj.node) {
             g.classList.add('dimmed');
           } else if (isActive) {
             g.classList.add('active-walkthrough');
@@ -814,24 +853,48 @@
         rect.setAttribute('y', -node.h / 2);
         rect.setAttribute('width', node.w);
         rect.setAttribute('height', node.h);
-        rect.setAttribute('rx', node.category === 'root' ? 14 : 8);
+        rect.setAttribute('rx', node.category === 'root' ? 14 : 10);
         rect.setAttribute('fill', style.fill);
         rect.setAttribute('stroke', style.stroke);
         rect.setAttribute('stroke-width', style.strokeW);
         rect.setAttribute('filter', 'url(#nodeShadow)');
 
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('dominant-baseline', 'central');
-        text.setAttribute('fill', style.text);
-        text.setAttribute('font-size', node.category === 'root' ? '14' : (node.category === 'branch' ? '12.5' : '11.5'));
-        text.setAttribute('font-weight', node.category === 'root' || node.category === 'branch' ? '700' : '500');
-        text.textContent = node.label;
-
         g.appendChild(rect);
-        g.appendChild(text);
 
-        // Handlers
+        // Multi-line Text support for combined clusters
+        if (node.subtext) {
+          const textMain = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          textMain.setAttribute('text-anchor', 'middle');
+          textMain.setAttribute('x', 0);
+          textMain.setAttribute('y', -node.h * 0.18);
+          textMain.setAttribute('fill', style.text);
+          textMain.setAttribute('font-size', '12');
+          textMain.setAttribute('font-weight', '700');
+          textMain.textContent = node.label;
+
+          const textSub = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          textSub.setAttribute('text-anchor', 'middle');
+          textSub.setAttribute('x', 0);
+          textSub.setAttribute('y', node.h * 0.22);
+          textSub.setAttribute('fill', '#94a3b8');
+          textSub.setAttribute('font-size', '9.5');
+          textSub.setAttribute('font-weight', '500');
+          textSub.textContent = node.subtext;
+
+          g.appendChild(textMain);
+          g.appendChild(textSub);
+        } else {
+          const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          text.setAttribute('text-anchor', 'middle');
+          text.setAttribute('dominant-baseline', 'central');
+          text.setAttribute('fill', style.text);
+          text.setAttribute('font-size', node.category === 'root' ? '14' : (node.category === 'branch' ? '12.5' : '11.5'));
+          text.setAttribute('font-weight', node.category === 'root' || node.category === 'branch' ? '700' : '600');
+          text.textContent = node.label;
+          g.appendChild(text);
+        }
+
+        // Event handlers
         g.addEventListener('mouseenter', () => handleNodeHover(node.id));
         g.addEventListener('mouseleave', () => handleNodeLeave());
         g.addEventListener('click', (e) => {
@@ -843,36 +906,68 @@
       });
     }
 
-    function setViewMode(mode) {
-      currentMode = mode;
-      document.querySelectorAll('#mode-focus, #mode-wizard, #mode-all').forEach(btn => {
-        btn.className = 'px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all flex items-center gap-1.5';
-      });
+    function setGroupingMode(mode) {
+      groupingMode = mode;
+      document.getElementById('mode-combined').className = mode === 'combined'
+        ? 'px-3 py-1.5 rounded-lg font-medium transition-all bg-emerald-600 text-white shadow-sm flex items-center gap-1.5'
+        : 'px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all flex items-center gap-1.5';
 
-      const activeBtn = document.getElementById(`mode-${mode}`);
-      if (activeBtn) {
-        activeBtn.className = 'px-3 py-1.5 rounded-lg font-medium transition-all bg-sky-600 text-white shadow-sm flex items-center gap-1.5';
+      document.getElementById('mode-granular').className = mode === 'granular'
+        ? 'px-3 py-1.5 rounded-lg font-medium transition-all bg-sky-600 text-white shadow-sm flex items-center gap-1.5'
+        : 'px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all flex items-center gap-1.5';
+
+      const toast = document.getElementById('toast-text');
+      const badge = document.getElementById('efficiency-badge');
+
+      if (mode === 'combined') {
+        toast.textContent = "Combined Mode: Identical lines consolidated into brackets (18 lines total). Perfect for paper!";
+        badge.textContent = "18 Lines vs 44";
+        badge.className = "text-[10px] text-emerald-400 bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-800";
+      } else {
+        toast.textContent = "Granular Mode: All 22 algorithms & metrics rendered as individual separate nodes.";
+        badge.textContent = "44 Lines (Granular)";
+        badge.className = "text-[10px] text-sky-400 bg-sky-950 px-1.5 py-0.5 rounded border border-sky-800";
       }
 
-      const walkthroughBar = document.getElementById('walkthrough-bar');
-      const toast = document.getElementById('toast-text');
+      selectedNodeId = null;
+      renderCanvas();
+    }
 
-      if (mode === 'wizard') {
+    function toggleWalkthrough() {
+      isWalkthrough = !isWalkthrough;
+      const walkthroughBar = document.getElementById('walkthrough-bar');
+      const wizardBtn = document.getElementById('mode-wizard');
+
+      if (isWalkthrough) {
         walkthroughBar.classList.remove('hidden');
+        wizardBtn.classList.add('bg-amber-600', 'text-white');
+        wizardStep = 1;
         updateWizardUI();
       } else {
         walkthroughBar.classList.add('hidden');
-        if (mode === 'focus') {
-          toast.textContent = "Clean Focus Mode: Click or hover any algorithm or metric to see its lines.";
-        } else {
-          toast.textContent = "All Highway Joins Mode: Displaying all connections via non-crossing overhead channels.";
-        }
+        wizardBtn.classList.remove('bg-amber-600', 'text-white');
       }
       renderCanvas();
     }
 
+    function updateWizardUI() {
+      const activeSteps = (groupingMode === 'combined') ? combinedWizardSteps : wizardSteps;
+      const step = activeSteps[wizardStep - 1];
+      if (!step) return;
+
+      document.getElementById('wizard-step-badge').textContent = `Step ${wizardStep} of ${activeSteps.length}`;
+      document.getElementById('wizard-step-title').textContent = step.title;
+      document.getElementById('wizard-step-action').textContent = step.action;
+      document.getElementById('toast-text').textContent = step.action;
+
+      if (step.node) {
+        inspectNode(step.node);
+      }
+    }
+
     function nextWizardStep() {
-      if (wizardStep < wizardSteps.length) {
+      const activeSteps = (groupingMode === 'combined') ? combinedWizardSteps : wizardSteps;
+      if (wizardStep < activeSteps.length) {
         wizardStep++;
         updateWizardUI();
         renderCanvas();
@@ -887,32 +982,16 @@
       }
     }
 
-    function updateWizardUI() {
-      const step = wizardSteps[wizardStep - 1];
-      document.getElementById('wizard-step-badge').textContent = `Step ${wizardStep} of ${wizardSteps.length}`;
-      document.getElementById('wizard-step-title').textContent = step.title;
-      document.getElementById('wizard-step-action').textContent = step.action;
-      document.getElementById('toast-text').textContent = step.action;
-
-      if (step.node) {
-        inspectNode(step.node);
-      }
-    }
-
     function handleNodeHover(nodeId) {
-      if (currentMode === 'wizard') return;
+      if (isWalkthrough) return;
       hoveredNodeId = nodeId;
-      if (currentMode === 'focus') {
-        renderCanvas();
-      }
+      renderCanvas();
     }
 
     function handleNodeLeave() {
-      if (currentMode === 'wizard') return;
+      if (isWalkthrough) return;
       hoveredNodeId = null;
-      if (currentMode === 'focus' && !selectedNodeId) {
-        renderCanvas();
-      }
+      renderCanvas();
     }
 
     function handleNodeClick(nodeId) {
@@ -922,7 +1001,9 @@
     }
 
     function inspectNode(nodeId) {
-      const node = nodes[nodeId];
+      const activeNodes = (groupingMode === 'combined') ? combinedNodes : nodes;
+      const activeDashed = (groupingMode === 'combined') ? combinedDashedJoins : dashedJoins;
+      const node = activeNodes[nodeId];
       if (!node) return;
 
       const titleEl = document.getElementById('inspector-title');
@@ -930,16 +1011,21 @@
       const linksContainer = document.getElementById('inspector-links');
 
       titleEl.textContent = node.label;
-      let desc = node.desc || (node.formula ? `Formula: ${node.formula}` : node.sub || 'Mind map component.');
+      let desc = node.desc || node.sub || 'Mind map component.';
+      if (node.subtext) {
+        desc += ` (${node.subtext})`;
+      }
       descEl.textContent = desc;
 
-      const relJoins = dashedJoins.filter(j => j.from === nodeId || j.to === nodeId);
+      const relJoins = activeDashed.filter(j => j.from === nodeId || j.to === nodeId);
       if (relJoins.length > 0) {
         linksContainer.classList.remove('hidden');
-        linksContainer.innerHTML = '<span class="font-semibold text-slate-300">Required Pencil Connections:</span>';
+        linksContainer.innerHTML = '<span class="font-semibold text-slate-300">Pencil Connections to Draw:</span>';
         relJoins.forEach(j => {
           const targetId = j.from === nodeId ? j.to : j.from;
-          const targetNode = nodes[targetId];
+          const targetNode = activeNodes[targetId];
+          if (!targetNode) return;
+
           const badgeClass = j.type === 'algo-fam' ? 'text-amber-400 border-amber-800 bg-amber-950/40' :
                              (j.type === 'algo-kq' ? 'text-sky-400 border-sky-800 bg-sky-950/40' : 'text-emerald-400 border-emerald-800 bg-emerald-950/40');
           const typeLabel = j.type === 'algo-fam' ? 'Family of Technique' : (j.type === 'algo-kq' ? 'Kind of Question' : 'Evaluates Question');
@@ -968,6 +1054,7 @@
       document.getElementById('checklist-counter').textContent = `${checked}/${total} done`;
     }
 
+    // Pan & Zoom controls
     let viewBox = { x: 0, y: 0, w: 1850, h: 1150 };
     let isPanning = false;
     let startPoint = { x: 0, y: 0 };
