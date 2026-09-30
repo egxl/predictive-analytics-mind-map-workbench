@@ -85,6 +85,18 @@
     <!-- Center: Interactive Controls & Filters -->
     <div class="flex flex-wrap items-center gap-2 text-xs">
       
+      <!-- Layout Style Switcher: Perimeter vs Left-Bus -->
+      <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800">
+        <button onclick="setLayoutStyle('perimeter')" id="layout-perimeter" class="px-2.5 py-1.5 rounded-lg font-medium transition-all bg-sky-600 text-white shadow-sm flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9h6v6H9z"/></svg>
+          4-Corner Perimeter (Easiest to Draw)
+        </button>
+        <button onclick="setLayoutStyle('leftbus')" id="layout-leftbus" class="px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          Side-Bus Layout
+        </button>
+      </div>
+
       <!-- Grouping Switcher -->
       <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800">
         <button onclick="setGroupingMode('combined')" id="mode-combined" class="px-2.5 py-1.5 rounded-lg font-medium transition-all bg-emerald-600 text-white shadow-sm flex items-center gap-1.5">
@@ -147,29 +159,29 @@
       <!-- Overhead Legend Card -->
       <div class="absolute top-4 left-4 z-10 bg-slate-900/90 backdrop-blur border border-slate-800 rounded-xl p-3 shadow-xl max-w-xs pointer-events-auto">
         <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center justify-between">
-          <span>Non-Crossing Blueprint</span>
-          <span id="efficiency-badge" class="text-[10px] text-emerald-400 bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-800">18 Lines • 0 Overlaps</span>
+          <span id="layout-badge-title">4-Corner Flow Topology</span>
+          <span id="efficiency-badge" class="text-[10px] text-emerald-400 bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-800">Perimeter Flow • 0 Crossings</span>
         </div>
         <div class="space-y-1.5 text-xs">
           <div class="flex items-center gap-2">
             <div class="w-6 h-0.5 bg-slate-400"></div>
-            <span class="text-slate-300 font-medium">Solid Line: Mind map hierarchy tree</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <div class="w-6 h-0.5 border-t-2 border-dashed border-sky-400"></div>
-            <span class="text-sky-300">Blue Dashed: Algo &rarr; Question (Dedicated Lanes)</span>
+            <span class="text-slate-300 font-medium">Solid Line: 4 Corner diagonal hubs</span>
           </div>
           <div class="flex items-center gap-2">
             <div class="w-6 h-0.5 border-t-2 border-dashed border-amber-400"></div>
-            <span class="text-amber-300">Orange Dashed: Algo &rarr; Family (South Lanes)</span>
+            <span class="text-amber-300">West Border: Algo &darr; Family</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-0.5 border-t-2 border-dashed border-sky-400"></div>
+            <span class="text-sky-300">North Border: Algo &rarr; Question</span>
           </div>
           <div class="flex items-center gap-2">
             <div class="w-6 h-0.5 border-t-2 border-dashed border-emerald-400"></div>
-            <span class="text-emerald-300">Green Dashed: Metric &rarr; Question (Overhead Arches)</span>
+            <span class="text-emerald-300">East Border: Metric &uarr; Question</span>
           </div>
         </div>
-        <div class="mt-2.5 pt-2 border-t border-slate-800/80 text-[11px] text-slate-400">
-          <span class="text-emerald-400 font-semibold">Zero-Overlap Design:</span> Every line has its own dedicated highway coordinate. Nothing overlaps or crosses through boxes!
+        <div id="layout-caption" class="mt-2.5 pt-2 border-t border-slate-800/80 text-[11px] text-slate-400">
+          <span class="text-emerald-400 font-semibold">Zero-Overlap:</span> Connections run purely along the 3 outer margins of the paper. Center is completely clear!
         </div>
       </div>
 
@@ -267,16 +279,21 @@
 
         <!-- Hand Drawing Zero-Overlap Rules -->
         <div class="space-y-2">
-          <h3 class="font-bold text-slate-200 uppercase tracking-wider text-[11px]">How To Avoid Overlaps On Paper</h3>
+          <h3 class="font-bold text-slate-200 uppercase tracking-wider text-[11px]">Why The 4-Corner Layout is Best for Hand Drawing</h3>
           <div class="space-y-2 text-slate-400 text-[11px]">
             <div class="bg-slate-950/60 p-2.5 rounded-lg border border-sky-900/50">
-              <span class="text-sky-400 font-bold">1. Keep Left Margin for Highway Lanes:</span> Leave a 1.5-inch strip of empty space on the left edge of your paper. All algorithm lines turn into this strip, travel vertically without crossing each other, and enter the questions from the left!
+              <span class="text-sky-400 font-bold">1. Clean Quadrants:</span> Place PREDICTION in the center, and branch out diagonally to the 4 corners: Algorithms (Top-Left), Family (Bottom-Left), Questions (Top-Right), Metrics (Bottom-Right).
             </div>
             <div class="bg-slate-950/60 p-2.5 rounded-lg border border-emerald-900/50">
-              <span class="text-emerald-400 font-bold">2. Draw Overhead Arcs Above Center:</span> Pull metric dashed lines up and over the top of the paper (above PREDICTION), so they never intersect the center hierarchy lines.
+              <span class="text-emerald-400 font-bold">2. Three Pure Border Paths:</span>
+              <ul class="list-disc list-inside mt-1 space-y-0.5 text-slate-300">
+                <li><strong class="text-amber-300">West margin:</strong> Draw lines down from Algorithms to Families.</li>
+                <li><strong class="text-sky-300">North margin:</strong> Draw lines right from Algorithms to Questions.</li>
+                <li><strong class="text-emerald-300">East margin:</strong> Draw lines up from Metrics to Questions.</li>
+              </ul>
             </div>
             <div class="bg-slate-950/60 p-2.5 rounded-lg border border-amber-900/50">
-              <span class="text-amber-400 font-bold">3. Concentric Radii:</span> Draw each overhead arch slightly higher than the last (like concentric rainbow arches). They will remain completely parallel with zero crossings.
+              <span class="text-amber-400 font-bold">3. No Line Crosses The Middle:</span> None of the dashed pencil lines will ever cut through PREDICTION or intersect any diagonal branch lines!
             </div>
           </div>
         </div>
@@ -430,9 +447,10 @@
 
   <!-- Main JavaScript Logic Engine -->
   <script>
+    let layoutStyle = 'perimeter'; // 'perimeter' (4-corners) or 'leftbus'
     let groupingMode = 'combined'; // 'combined' or 'granular'
     let layerFilter = 'all';       // 'all', 'algo-kq', 'algo-fam', 'metric-kq'
-    let lineStyle = 'orthogonal';  // 'orthogonal' (multi-lane) or 'bezier'
+    let lineStyle = 'orthogonal';  // 'orthogonal' or 'bezier'
     let isWalkthrough = false;
     let wizardStep = 1;
     let selectedNodeId = null;
@@ -454,176 +472,158 @@
       'metric-kq': '#34d399', // Emerald Green
     };
 
-    // COMBINED DATASET: Engineered with clear non-intersecting corridors
-    const combinedNodes = {
+    // 4-CORNER PERIMETER NODES (Zero lines through center, minimal line lengths)
+    const perimeterCombinedNodes = {
       // Center
-      root: { id: 'root', label: 'PREDICTION', sub: 'Central Concept', category: 'root', x: 1120, y: 640, w: 180, h: 52 },
+      root: { id: 'root', label: 'PREDICTION', sub: 'Central Concept', category: 'root', x: 1100, y: 700, w: 180, h: 52 },
 
-      // Four Main Branch Hubs
-      b_kq: { id: 'b_kq', label: 'Kind of question', sub: '3 business targets', category: 'branch', x: 580, y: 220, w: 180, h: 42 },
-      b_al: { id: 'b_al', label: 'Algorithms', sub: 'Named method clusters', category: 'branch', x: 920, y: 640, w: 160, h: 42 },
-      b_ft: { id: 'b_ft', label: 'Family of technique', sub: '3 traditions', category: 'branch', x: 580, y: 1060, w: 190, h: 42 },
-      b_me: { id: 'b_me', label: 'Metrics', sub: 'Evaluation suites', category: 'branch', x: 1460, y: 640, w: 160, h: 42 },
+      // Four Corner Diagonal Branch Hubs
+      b_al: { id: 'b_al', label: 'Algorithms', sub: 'Top-Left Corner', category: 'branch', x: 640, y: 440, w: 160, h: 42 },
+      b_ft: { id: 'b_ft', label: 'Family of technique', sub: 'Bottom-Left Corner', category: 'branch', x: 640, y: 960, w: 190, h: 42 },
+      b_kq: { id: 'b_kq', label: 'Kind of question', sub: 'Top-Right Corner', category: 'branch', x: 1560, y: 440, w: 180, h: 42 },
+      b_me: { id: 'b_me', label: 'Metrics', sub: 'Bottom-Right Corner', category: 'branch', x: 1560, y: 960, w: 160, h: 42 },
 
-      // Branch 1: Kind of Question (Top-Left Column at X: 310)
-      kq_cls: { id: 'kq_cls', label: 'Classification', category: 'kq', x: 310, y: 140, w: 170, h: 42, desc: 'Categorical discrete prediction (e.g., Churn yes/no, customer segment).', portY: 140 },
-      kq_reg: { id: 'kq_reg', label: 'Regression', category: 'kq', x: 310, y: 220, w: 170, h: 42, desc: 'Continuous numerical value prediction (e.g., House price, customer spend).', portY: 220 },
-      kq_tsf: { id: 'kq_tsf', label: 'Time series forecasting', category: 'kq', x: 310, y: 300, w: 195, h: 42, desc: 'Ordered chronological sequence prediction (e.g., Monthly unit sales).', portY: 300 },
-
-      // Branch 2: Family of Technique (Bottom-Left Column at X: 310)
-      ft_sta: { id: 'ft_sta', label: 'Statistics', category: 'ft', x: 310, y: 980, w: 160, h: 40, desc: 'Probabilistic models, parameter estimation, interpretable feature weights.', portY: 980 },
-      ft_ml:  { id: 'ft_ml',  label: 'Machine learning', category: 'ft', x: 310, y: 1060, w: 175, h: 40, desc: 'Iterative optimization, recursive rule splitting, margin boundaries.', portY: 1060 },
-      ft_dl:  { id: 'ft_dl',  label: 'Deep learning', category: 'ft', x: 310, y: 1140, w: 160, h: 40, desc: 'Multi-layer neural networks learning hierarchical representations.', portY: 1140 },
-
-      // Branch 3: Algorithm Clusters (Middle Column at X: 640)
+      // Branch 1: Algorithms (Top-Left Column: X: 350)
       al_linear: {
         id: 'al_linear',
         label: 'Linear & Regularized Models',
         subtext: 'Linear Reg • Ridge • Lasso • Elastic Net',
         category: 'al',
-        x: 640, y: 440, w: 250, h: 50,
+        x: 350, y: 220, w: 250, h: 48,
         family: 'Statistics',
         questions: ['Regression'],
-        desc: 'Group of 4 linear methods predicting continuous numbers via feature weights (Saves 6 redundant lines!).',
-        outPortY: 440
+        desc: 'Group of 4 linear methods predicting continuous numbers via feature weights.',
       },
       al_prob: {
         id: 'al_prob',
         label: 'Probabilistic Classifiers',
         subtext: 'Logistic Regression • Naive Bayes',
         category: 'al',
-        x: 640, y: 510, w: 235, h: 48,
+        x: 350, y: 290, w: 240, h: 46,
         family: 'Statistics',
         questions: ['Classification'],
-        desc: 'Statistical methods producing class probabilities via sigmoid or Bayes rule (Saves 2 redundant lines!).',
-        outPortY: 510
+        desc: 'Statistical methods producing class probabilities via sigmoid or Bayes rule.',
       },
       al_ts: {
         id: 'al_ts',
         label: 'Temporal Sequence Model',
         subtext: 'ARIMA (Autoregressive Int. Moving Avg)',
         category: 'al',
-        x: 640, y: 575, w: 245, h: 46,
+        x: 350, y: 355, w: 245, h: 44,
         family: 'Statistics',
         questions: ['Time series forecasting'],
-        desc: 'Specialized statistical model leveraging temporal lags and differencing for chronological forecasts.',
-        outPortY: 575
+        desc: 'Specialized statistical model leveraging temporal lags and differencing.',
       },
       al_tree: {
         id: 'al_tree',
         label: 'Tree Models & Ensembles',
         subtext: 'Decision Tree • Random Forest • Gradient Boost',
         category: 'al',
-        x: 640, y: 645, w: 265, h: 52,
+        x: 350, y: 425, w: 265, h: 50,
         family: 'Machine learning',
         questions: ['Classification', 'Regression'],
         desc: 'Recursive partitioning and bagging/boosting ensembles. Solves BOTH Classification and Regression!',
-        outPortY: 645
       },
       al_geom: {
         id: 'al_geom',
         label: 'Margin & Distance ML',
         subtext: 'Support Vector Machine (SVM) • k-NN',
         category: 'al',
-        x: 640, y: 715, w: 245, h: 48,
+        x: 350, y: 495, w: 245, h: 46,
         family: 'Machine learning',
         questions: ['Classification', 'Regression'],
-        desc: 'Geometric separating boundaries (SVM) and local neighborhood voting/averaging (k-NN).',
-        outPortY: 715
+        desc: 'Geometric separating boundaries (SVM) and local neighborhood voting (k-NN).',
       },
       al_nn: {
         id: 'al_nn',
         label: 'Deep Representation',
         subtext: 'Neural Network (Multi-Layer Perceptron)',
         category: 'al',
-        x: 640, y: 785, w: 255, h: 50,
+        x: 350, y: 565, w: 255, h: 48,
         family: 'Deep learning',
         questions: ['Classification', 'Regression', 'Time series forecasting'],
         desc: 'Stacked interconnected artificial neurons; universal approximator across all 3 problem types.',
-        outPortY: 785
       },
 
-      // Branch 4: Metric Suites (Right Column at X: 1820)
+      // Branch 2: Family of Technique (Bottom-Left Column: X: 350)
+      ft_sta: { id: 'ft_sta', label: 'Statistics', category: 'ft', x: 350, y: 880, w: 170, h: 42, desc: 'Probabilistic models, parameter estimation, interpretable feature weights.' },
+      ft_ml:  { id: 'ft_ml',  label: 'Machine learning', category: 'ft', x: 350, y: 980, w: 180, h: 42, desc: 'Iterative optimization, recursive rule splitting, margin boundaries.' },
+      ft_dl:  { id: 'ft_dl',  label: 'Deep learning', category: 'ft', x: 350, y: 1080, w: 170, h: 42, desc: 'Multi-layer neural networks learning hierarchical representations.' },
+
+      // Branch 3: Kind of Question (Top-Right Column: X: 1850)
+      kq_cls: { id: 'kq_cls', label: 'Classification', category: 'kq', x: 1850, y: 220, w: 170, h: 42, desc: 'Categorical discrete prediction (e.g., Churn yes/no, customer segment).' },
+      kq_reg: { id: 'kq_reg', label: 'Regression', category: 'kq', x: 1850, y: 310, w: 170, h: 42, desc: 'Continuous numerical value prediction (e.g., House price, customer spend).' },
+      kq_tsf: { id: 'kq_tsf', label: 'Time series forecasting', category: 'kq', x: 1850, y: 400, w: 195, h: 42, desc: 'Ordered chronological sequence prediction (e.g., Monthly unit sales).' },
+
+      // Branch 4: Metrics (Bottom-Right Column: X: 1850)
       me_cls_suite: {
         id: 'me_cls_suite',
         label: 'Classification Metric Suite',
         subtext: 'Accuracy • Precision • Recall • Specificity • NPV • F1',
         category: 'me',
-        x: 1820, y: 440, w: 300, h: 72,
+        x: 1850, y: 860, w: 290, h: 68,
         questions: ['Classification'],
         desc: 'All 6 metrics derived from confusion matrix (TP, TN, FP, FN). Evaluates discrete classification.',
-        outPortY: 440
       },
       me_err_suite: {
         id: 'me_err_suite',
         label: 'Continuous Error Suite',
         subtext: 'MAE • MSE • RMSE • MAPE',
         category: 'me',
-        x: 1820, y: 640, w: 280, h: 66,
+        x: 1850, y: 980, w: 270, h: 62,
         questions: ['Regression', 'Time series forecasting'],
         desc: 'Summary error statistics of |actual - predicted|. Evaluates both Regression and Time Series Forecasting.',
-        outPortY: 640
       },
       me_r2: {
         id: 'me_r2',
         label: 'Variance Explained (R²)',
         subtext: 'Coefficient of Determination (1 - SSres/SStot)',
         category: 'me',
-        x: 1820, y: 840, w: 265, h: 50,
+        x: 1850, y: 1090, w: 250, h: 48,
         questions: ['Regression'],
         desc: 'Proportion of target variance explained by input features. Specific to cross-sectional Regression.',
-        outPortY: 840
       }
     };
 
-    // COMBINED RELATIONAL JOINS: Engineered with dedicated lanes (ZERO overlapping lines)
-    const combinedDashedJoins = [
-      // ALGO -> QUESTIONS (North-bound vertical lanes)
-      // Lane Q1 (X: 60) -> Classification
-      // Lane Q2 (X: 100) -> Regression
-      // Lane Q3 (X: 140) -> Time Series
-      { id: 'cj_prob_cls', type: 'algo-kq', from: 'al_prob', to: 'kq_cls', laneX: 60,  channel: 'north' },
-      { id: 'cj_tree_cls', type: 'algo-kq', from: 'al_tree', to: 'kq_cls', laneX: 60,  channel: 'north' },
-      { id: 'cj_geom_cls', type: 'algo-kq', from: 'al_geom', to: 'kq_cls', laneX: 60,  channel: 'north' },
-      { id: 'cj_nn_cls',   type: 'algo-kq', from: 'al_nn',   to: 'kq_cls', laneX: 60,  channel: 'north' },
+    // Joins for 4-Corner Perimeter Layout:
+    // West border (Algo -> Fam), North border (Algo -> Question), East border (Metric -> Question)
+    const perimeterCombinedJoins = [
+      // ALGO -> FAMILIES (West Border Channels: X = 160, 110, 60)
+      { id: 'pj_lin_sta',  type: 'algo-fam', from: 'al_linear', to: 'ft_sta', border: 'west', laneX: 160 },
+      { id: 'pj_prob_sta', type: 'algo-fam', from: 'al_prob',   to: 'ft_sta', border: 'west', laneX: 160 },
+      { id: 'pj_ts_sta',   type: 'algo-fam', from: 'al_ts',     to: 'ft_sta', border: 'west', laneX: 160 },
 
-      { id: 'cj_lin_reg',  type: 'algo-kq', from: 'al_linear', to: 'kq_reg', laneX: 100, channel: 'north' },
-      { id: 'cj_tree_reg', type: 'algo-kq', from: 'al_tree',   to: 'kq_reg', laneX: 100, channel: 'north' },
-      { id: 'cj_geom_reg', type: 'algo-kq', from: 'al_geom',   to: 'kq_reg', laneX: 100, channel: 'north' },
-      { id: 'cj_nn_reg',   type: 'algo-kq', from: 'al_nn',     to: 'kq_reg', laneX: 100, channel: 'north' },
+      { id: 'pj_tree_ml',  type: 'algo-fam', from: 'al_tree', to: 'ft_ml',  border: 'west', laneX: 110 },
+      { id: 'pj_geom_ml',  type: 'algo-fam', from: 'al_geom', to: 'ft_ml',  border: 'west', laneX: 110 },
 
-      { id: 'cj_ts_tsf',   type: 'algo-kq', from: 'al_ts',   to: 'kq_tsf', laneX: 140, channel: 'north' },
-      { id: 'cj_nn_tsf',   type: 'algo-kq', from: 'al_nn',   to: 'kq_tsf', laneX: 140, channel: 'north' },
+      { id: 'pj_nn_dl',    type: 'algo-fam', from: 'al_nn',   to: 'ft_dl',  border: 'west', laneX: 60 },
 
-      // ALGO -> FAMILIES (South-bound vertical lanes)
-      // Lane F1 (X: 140) -> Statistics
-      // Lane F2 (X: 100) -> Machine Learning
-      // Lane F3 (X: 60)  -> Deep Learning
-      { id: 'cj_lin_sta',  type: 'algo-fam', from: 'al_linear', to: 'ft_sta', laneX: 140, channel: 'south' },
-      { id: 'cj_prob_sta', type: 'algo-fam', from: 'al_prob',   to: 'ft_sta', laneX: 140, channel: 'south' },
-      { id: 'cj_ts_sta',   type: 'algo-fam', from: 'al_ts',     to: 'ft_sta', laneX: 140, channel: 'south' },
+      // ALGO -> QUESTIONS (North Border Channels: Y = 130, 90, 50)
+      { id: 'pj_prob_cls', type: 'algo-kq', from: 'al_prob', to: 'kq_cls', border: 'north', laneY: 130 },
+      { id: 'pj_tree_cls', type: 'algo-kq', from: 'al_tree', to: 'kq_cls', border: 'north', laneY: 130 },
+      { id: 'pj_geom_cls', type: 'algo-kq', from: 'al_geom', to: 'kq_cls', border: 'north', laneY: 130 },
+      { id: 'pj_nn_cls',   type: 'algo-kq', from: 'al_nn',   to: 'kq_cls', border: 'north', laneY: 130 },
 
-      { id: 'cj_tree_ml',  type: 'algo-fam', from: 'al_tree', to: 'ft_ml',  laneX: 100, channel: 'south' },
-      { id: 'cj_geom_ml',  type: 'algo-fam', from: 'al_geom', to: 'ft_ml',  laneX: 100, channel: 'south' },
+      { id: 'pj_lin_reg',  type: 'algo-kq', from: 'al_linear', to: 'kq_reg', border: 'north', laneY: 90 },
+      { id: 'pj_tree_reg', type: 'algo-kq', from: 'al_tree',   to: 'kq_reg', border: 'north', laneY: 90 },
+      { id: 'pj_geom_reg', type: 'algo-kq', from: 'al_geom',   to: 'kq_reg', border: 'north', laneY: 90 },
+      { id: 'pj_nn_reg',   type: 'algo-kq', from: 'al_nn',     to: 'kq_reg', border: 'north', laneY: 90 },
 
-      { id: 'cj_nn_dl',    type: 'algo-fam', from: 'al_nn',   to: 'ft_dl',  laneX: 60,  channel: 'south' },
+      { id: 'pj_ts_tsf',   type: 'algo-kq', from: 'al_ts',   to: 'kq_tsf', border: 'north', laneY: 50 },
+      { id: 'pj_nn_tsf',   type: 'algo-kq', from: 'al_nn',   to: 'kq_tsf', border: 'north', laneY: 50 },
 
-      // METRICS -> QUESTIONS (Overhead high clearance concentric arches, zero crossing)
-      { id: 'cj_cls_suite', type: 'metric-kq', from: 'me_cls_suite', to: 'kq_cls', apexY: 45,  channel: 'overhead' },
-      { id: 'cj_err_reg',   type: 'metric-kq', from: 'me_err_suite', to: 'kq_reg', apexY: 70,  channel: 'overhead' },
-      { id: 'cj_err_tsf',   type: 'metric-kq', from: 'me_err_suite', to: 'kq_tsf', apexY: 95,  channel: 'overhead' },
-      { id: 'cj_r2_reg',    type: 'metric-kq', from: 'me_r2',        to: 'kq_reg', apexY: 120, channel: 'overhead' },
+      // METRICS -> QUESTIONS (East Border Channels: X = 2040, 2085, 2130)
+      { id: 'pj_cls_suite', type: 'metric-kq', from: 'me_cls_suite', to: 'kq_cls', border: 'east', laneX: 2040 },
+      { id: 'pj_err_reg',   type: 'metric-kq', from: 'me_err_suite', to: 'kq_reg', border: 'east', laneX: 2085 },
+      { id: 'pj_err_tsf',   type: 'metric-kq', from: 'me_err_suite', to: 'kq_tsf', border: 'east', laneX: 2085 },
+      { id: 'pj_r2_reg',    type: 'metric-kq', from: 'me_r2',        to: 'kq_reg', border: 'east', laneX: 2130 },
     ];
 
-    // Solid Hierarchy Tree Branches
-    const combinedSolidBranches = [
-      { from: 'root', to: 'b_kq' },
+    const perimeterSolidBranches = [
       { from: 'root', to: 'b_al' },
       { from: 'root', to: 'b_ft' },
+      { from: 'root', to: 'b_kq' },
       { from: 'root', to: 'b_me' },
-      { from: 'b_kq', to: 'kq_cls' },
-      { from: 'b_kq', to: 'kq_reg' },
-      { from: 'b_kq', to: 'kq_tsf' },
       { from: 'b_al', to: 'al_linear' },
       { from: 'b_al', to: 'al_prob' },
       { from: 'b_al', to: 'al_ts' },
@@ -633,163 +633,85 @@
       { from: 'b_ft', to: 'ft_sta' },
       { from: 'b_ft', to: 'ft_ml' },
       { from: 'b_ft', to: 'ft_dl' },
+      { from: 'b_kq', to: 'kq_cls' },
+      { from: 'b_kq', to: 'kq_reg' },
+      { from: 'b_kq', to: 'kq_tsf' },
       { from: 'b_me', to: 'me_cls_suite' },
       { from: 'b_me', to: 'me_err_suite' },
       { from: 'b_me', to: 'me_r2' },
     ];
 
-    // Drawing Walkthrough Steps for Pen
-    const combinedWizardSteps = [
-      { id: 'cw_1', title: '1. Root Box: PREDICTION', node: 'root', action: 'Draw a rectangle in the center of your sheet labeled PREDICTION.' },
-      { id: 'cw_2', title: '2. Four Primary Branches', branch: 'all_branches', action: 'Draw the 4 solid radiating branches: Kind of question (top-left), Algorithms (mid-left), Family of technique (bottom-left), and Metrics (right).' },
-      { id: 'cw_3', title: '3. Kind of Question (3 Sub-Nodes)', branch: 'kq', action: 'Write Classification, Regression, and Time series forecasting at the top left.' },
-      { id: 'cw_4', title: '4. Family of Technique (3 Sub-Nodes)', branch: 'ft', action: 'Write Statistics, Machine learning, and Deep learning at the bottom left.' },
-      { id: 'cw_5', title: '5. Metrics Suites (3 Bracket Boxes)', branch: 'me', action: 'On the right side, draw 3 boxes: Classification Suite on top, Continuous Error Suite in the middle, and R² below.' },
-      { id: 'cw_6', title: '6. Linear & Regularized Cluster', node: 'al_linear', action: 'Draw bracket [Linear, Ridge, Lasso, Elastic Net]. Connect 1 line to Statistics and 1 line to Regression.' },
-      { id: 'cw_7', title: '7. Probabilistic Classifiers Cluster', node: 'al_prob', action: 'Draw bracket [Logistic Regression, Naive Bayes]. Connect 1 line to Statistics and 1 line to Classification.' },
-      { id: 'cw_8', title: '8. ARIMA (Temporal Lags)', node: 'al_ts', action: 'Draw ARIMA. Connect 1 line to Statistics and 1 line to Time series forecasting.' },
-      { id: 'cw_9', title: '9. Tree & Ensemble Cluster', node: 'al_tree', action: 'Draw bracket [Decision Tree, Random Forest, Gradient Boost]. Connect to Machine Learning, and pull 2 lines: to Classification AND Regression!' },
-      { id: 'cw_10', title: '10. Margin & Distance ML Cluster', node: 'al_geom', action: 'Draw bracket [SVM, k-NN]. Connect to Machine Learning, and pull lines to Classification & Regression.' },
-      { id: 'cw_11', title: '11. Deep Neural Network', node: 'al_nn', action: 'Draw Neural Network. Connect to Deep Learning, and link to ALL 3 questions (Cls, Reg, Time Series).' },
-      { id: 'cw_12', title: '12. Classification Metrics Highway', node: 'me_cls_suite', action: 'Draw ONE overhead arch from the Classification Suite directly to Classification.' },
-      { id: 'cw_13', title: '13. Continuous Error Highways', node: 'me_err_suite', action: 'Draw 2 overhead arches from Continuous Error Suite to Regression and Time Series Forecasting (plus 1 line from R² to Regression).' },
-    ];
-
-    // Granular Full Dataset (All 24 Nodes with Individual Offsets)
-    const granularNodes = {
-      root: { id: 'root', label: 'PREDICTION', category: 'root', x: 1120, y: 640, w: 180, h: 52 },
-      b_kq: { id: 'b_kq', label: 'Kind of question', category: 'branch', x: 580, y: 220, w: 180, h: 42 },
-      b_al: { id: 'b_al', label: 'Algorithms', category: 'branch', x: 920, y: 640, w: 160, h: 42 },
-      b_ft: { id: 'b_ft', label: 'Family of technique', category: 'branch', x: 580, y: 1060, w: 190, h: 42 },
-      b_me: { id: 'b_me', label: 'Metrics', category: 'branch', x: 1460, y: 640, w: 160, h: 42 },
-
-      kq_cls: { id: 'kq_cls', label: 'Classification', category: 'kq', x: 310, y: 140, w: 170, h: 40 },
-      kq_reg: { id: 'kq_reg', label: 'Regression', category: 'kq', x: 310, y: 220, w: 170, h: 40 },
-      kq_tsf: { id: 'kq_tsf', label: 'Time series forecasting', category: 'kq', x: 310, y: 300, w: 195, h: 40 },
-
-      ft_sta: { id: 'ft_sta', label: 'Statistics', category: 'ft', x: 310, y: 980, w: 160, h: 40 },
-      ft_ml:  { id: 'ft_ml',  label: 'Machine learning', category: 'ft', x: 310, y: 1060, w: 175, h: 40 },
-      ft_dl:  { id: 'ft_dl',  label: 'Deep learning', category: 'ft', x: 310, y: 1140, w: 160, h: 40 },
-
-      // Individual Algorithms
-      al_lin: { id: 'al_lin', label: 'Linear Regression', category: 'al', x: 640, y: 400, w: 200, h: 36, family: 'Statistics', questions: ['Regression'] },
-      al_rg:  { id: 'al_rg',  label: 'Ridge Regression', category: 'al', x: 640, y: 445, w: 200, h: 36, family: 'Statistics', questions: ['Regression'] },
-      al_ls:  { id: 'al_ls',  label: 'Lasso Regression', category: 'al', x: 640, y: 490, w: 200, h: 36, family: 'Statistics', questions: ['Regression'] },
-      al_en:  { id: 'al_en',  label: 'Elastic Net', category: 'al', x: 640, y: 535, w: 200, h: 36, family: 'Statistics', questions: ['Regression'] },
-      al_log: { id: 'al_log', label: 'Logistic Regression', category: 'al', x: 640, y: 580, w: 200, h: 36, family: 'Statistics', questions: ['Classification'] },
-      al_nb:  { id: 'al_nb',  label: 'Naive Bayes', category: 'al', x: 640, y: 625, w: 200, h: 36, family: 'Statistics', questions: ['Classification'] },
-      al_ari: { id: 'al_ari', label: 'ARIMA', category: 'al', x: 640, y: 670, w: 200, h: 36, family: 'Statistics', questions: ['Time series forecasting'] },
-      al_dt:  { id: 'al_dt',  label: 'Decision Tree', category: 'al', x: 640, y: 715, w: 200, h: 36, family: 'Machine learning', questions: ['Classification', 'Regression'] },
-      al_rf:  { id: 'al_rf',  label: 'Random Forest', category: 'al', x: 640, y: 760, w: 200, h: 36, family: 'Machine learning', questions: ['Classification', 'Regression'] },
-      al_gb:  { id: 'al_gb',  label: 'Gradient Boosting', category: 'al', x: 640, y: 805, w: 200, h: 36, family: 'Machine learning', questions: ['Classification', 'Regression'] },
-      al_svm: { id: 'al_svm', label: 'Support Vector Machine', category: 'al', x: 640, y: 850, w: 210, h: 36, family: 'Machine learning', questions: ['Classification', 'Regression'] },
-      al_knn: { id: 'al_knn', label: 'k-Nearest Neighbours', category: 'al', x: 640, y: 895, w: 200, h: 36, family: 'Machine learning', questions: ['Classification', 'Regression'] },
-      al_mlp: { id: 'al_mlp', label: 'Neural Network (MLP)', category: 'al', x: 640, y: 940, w: 210, h: 36, family: 'Deep learning', questions: ['Classification', 'Regression', 'Time series forecasting'] },
-
-      // Individual Metrics
-      me_acc: { id: 'me_acc', label: 'Accuracy (TP+TN)/all', category: 'me', x: 1820, y: 380, w: 220, h: 34 },
-      me_prc: { id: 'me_prc', label: 'Precision TP/(TP+FP)', category: 'me', x: 1820, y: 420, w: 220, h: 34 },
-      me_rec: { id: 'me_rec', label: 'Recall TP/(TP+FN)', category: 'me', x: 1820, y: 460, w: 220, h: 34 },
-      me_spf: { id: 'me_spf', label: 'Specificity TN/(TN+FP)', category: 'me', x: 1820, y: 500, w: 220, h: 34 },
-      me_npv: { id: 'me_npv', label: 'NPV TN/(TN+FN)', category: 'me', x: 1820, y: 540, w: 220, h: 34 },
-      me_f1:  { id: 'me_f1',  label: 'F1-Score 2PR/(P+R)', category: 'me', x: 1820, y: 580, w: 220, h: 34 },
-      me_mae: { id: 'me_mae', label: 'MAE avg(|gap|)', category: 'me', x: 1820, y: 640, w: 220, h: 34 },
-      me_mse: { id: 'me_mse', label: 'MSE avg(gap²)', category: 'me', x: 1820, y: 680, w: 220, h: 34 },
-      me_rms: { id: 'me_rms', label: 'RMSE √(MSE)', category: 'me', x: 1820, y: 720, w: 220, h: 34 },
-      me_map: { id: 'me_map', label: 'MAPE avg(|gap|/y)', category: 'me', x: 1820, y: 760, w: 220, h: 34 },
-      me_rsq: { id: 'me_rsq', label: 'R² (Variance Expl.)', category: 'me', x: 1820, y: 810, w: 220, h: 34 },
-    };
-
-    const granularSolidBranches = [
-      { from: 'root', to: 'b_kq' }, { from: 'root', to: 'b_al' }, { from: 'root', to: 'b_ft' }, { from: 'root', to: 'b_me' },
-      { from: 'b_kq', to: 'kq_cls' }, { from: 'b_kq', to: 'kq_reg' }, { from: 'b_kq', to: 'kq_tsf' },
-      { from: 'b_ft', to: 'ft_sta' }, { from: 'b_ft', to: 'ft_ml' }, { from: 'b_ft', to: 'ft_dl' },
-      { from: 'b_al', to: 'al_lin' }, { from: 'b_al', to: 'al_rg' }, { from: 'b_al', to: 'al_ls' }, { from: 'b_al', to: 'al_en' },
-      { from: 'b_al', to: 'al_log' }, { from: 'b_al', to: 'al_nb' }, { from: 'b_al', to: 'al_ari' }, { from: 'b_al', to: 'al_dt' },
-      { from: 'b_al', to: 'al_rf' }, { from: 'b_al', to: 'al_gb' }, { from: 'b_al', to: 'al_svm' }, { from: 'b_al', to: 'al_knn' },
-      { from: 'b_al', to: 'al_mlp' },
-      { from: 'b_me', to: 'me_acc' }, { from: 'b_me', to: 'me_prc' }, { from: 'b_me', to: 'me_rec' }, { from: 'b_me', to: 'me_spf' },
-      { from: 'b_me', to: 'me_npv' }, { from: 'b_me', to: 'me_f1' }, { from: 'b_me', to: 'me_mae' }, { from: 'b_me', to: 'me_mse' },
-      { from: 'b_me', to: 'me_rms' }, { from: 'b_me', to: 'me_map' }, { from: 'b_me', to: 'me_rsq' }
-    ];
-
-    const granularDashedJoins = [
-      // Algos to Family
-      { id: 'gj_lin_sta', type: 'algo-fam', from: 'al_lin', to: 'ft_sta', laneX: 140, channel: 'south' },
-      { id: 'gj_rg_sta',  type: 'algo-fam', from: 'al_rg',  to: 'ft_sta', laneX: 140, channel: 'south' },
-      { id: 'gj_ls_sta',  type: 'algo-fam', from: 'al_ls',  to: 'ft_sta', laneX: 140, channel: 'south' },
-      { id: 'gj_en_sta',  type: 'algo-fam', from: 'al_en',  to: 'ft_sta', laneX: 140, channel: 'south' },
-      { id: 'gj_log_sta', type: 'algo-fam', from: 'al_log', to: 'ft_sta', laneX: 140, channel: 'south' },
-      { id: 'gj_nb_sta',  type: 'algo-fam', from: 'al_nb',  to: 'ft_sta', laneX: 140, channel: 'south' },
-      { id: 'gj_ari_sta', type: 'algo-fam', from: 'al_ari', to: 'ft_sta', laneX: 140, channel: 'south' },
-      { id: 'gj_dt_ml',   type: 'algo-fam', from: 'al_dt',  to: 'ft_ml',  laneX: 100, channel: 'south' },
-      { id: 'gj_rf_ml',   type: 'algo-fam', from: 'al_rf',  to: 'ft_ml',  laneX: 100, channel: 'south' },
-      { id: 'gj_gb_ml',   type: 'algo-fam', from: 'al_gb',  to: 'ft_ml',  laneX: 100, channel: 'south' },
-      { id: 'gj_svm_ml',  type: 'algo-fam', from: 'al_svm', to: 'ft_ml',  laneX: 100, channel: 'south' },
-      { id: 'gj_knn_ml',  type: 'algo-fam', from: 'al_knn', to: 'ft_ml',  laneX: 100, channel: 'south' },
-      { id: 'gj_mlp_dl',  type: 'algo-fam', from: 'al_mlp', to: 'ft_dl',  laneX: 60,  channel: 'south' },
-
-      // Algos to Questions
-      { id: 'gj_log_cls', type: 'algo-kq', from: 'al_log', to: 'kq_cls', laneX: 60, channel: 'north' },
-      { id: 'gj_nb_cls',  type: 'algo-kq', from: 'al_nb',  to: 'kq_cls', laneX: 60, channel: 'north' },
-      { id: 'gj_dt_cls',  type: 'algo-kq', from: 'al_dt',  to: 'kq_cls', laneX: 60, channel: 'north' },
-      { id: 'gj_rf_cls',  type: 'algo-kq', from: 'al_rf',  to: 'kq_cls', laneX: 60, channel: 'north' },
-      { id: 'gj_gb_cls',  type: 'algo-kq', from: 'al_gb',  to: 'kq_cls', laneX: 60, channel: 'north' },
-      { id: 'gj_svm_cls', type: 'algo-kq', from: 'al_svm', to: 'kq_cls', laneX: 60, channel: 'north' },
-      { id: 'gj_knn_cls', type: 'algo-kq', from: 'al_knn', to: 'kq_cls', laneX: 60, channel: 'north' },
-      { id: 'gj_mlp_cls', type: 'algo-kq', from: 'al_mlp', to: 'kq_cls', laneX: 60, channel: 'north' },
-
-      { id: 'gj_lin_reg', type: 'algo-kq', from: 'al_lin', to: 'kq_reg', laneX: 100, channel: 'north' },
-      { id: 'gj_rg_reg',  type: 'algo-kq', from: 'al_rg',  to: 'kq_reg', laneX: 100, channel: 'north' },
-      { id: 'gj_ls_reg',  type: 'algo-kq', from: 'al_ls',  to: 'kq_reg', laneX: 100, channel: 'north' },
-      { id: 'gj_en_reg',  type: 'algo-kq', from: 'al_en',  to: 'kq_reg', laneX: 100, channel: 'north' },
-      { id: 'gj_dt_reg',  type: 'algo-kq', from: 'al_dt',  to: 'kq_reg', laneX: 100, channel: 'north' },
-      { id: 'gj_rf_reg',  type: 'algo-kq', from: 'al_rf',  to: 'kq_reg', laneX: 100, channel: 'north' },
-      { id: 'gj_gb_reg',  type: 'algo-kq', from: 'al_gb',  to: 'kq_reg', laneX: 100, channel: 'north' },
-      { id: 'gj_svm_reg', type: 'algo-kq', from: 'al_svm', to: 'kq_reg', laneX: 100, channel: 'north' },
-      { id: 'gj_knn_reg', type: 'algo-kq', from: 'al_knn', to: 'kq_reg', laneX: 100, channel: 'north' },
-      { id: 'gj_mlp_reg', type: 'algo-kq', from: 'al_mlp', to: 'kq_reg', laneX: 100, channel: 'north' },
-
-      { id: 'gj_ari_tsf', type: 'algo-kq', from: 'al_ari', to: 'kq_tsf', laneX: 140, channel: 'north' },
-      { id: 'gj_mlp_tsf', type: 'algo-kq', from: 'al_mlp', to: 'kq_tsf', laneX: 140, channel: 'north' },
-
-      // Metrics to Questions
-      { id: 'gj_acc_cls', type: 'metric-kq', from: 'me_acc', to: 'kq_cls', apexY: 45, channel: 'overhead' },
-      { id: 'gj_prc_cls', type: 'metric-kq', from: 'me_prc', to: 'kq_cls', apexY: 45, channel: 'overhead' },
-      { id: 'gj_rec_cls', type: 'metric-kq', from: 'me_rec', to: 'kq_cls', apexY: 45, channel: 'overhead' },
-      { id: 'gj_mae_reg', type: 'metric-kq', from: 'me_mae', to: 'kq_reg', apexY: 70, channel: 'overhead' },
-      { id: 'gj_rms_reg', type: 'metric-kq', from: 'me_rms', to: 'kq_reg', apexY: 70, channel: 'overhead' },
-      { id: 'gj_rsq_reg', type: 'metric-kq', from: 'me_rsq', to: 'kq_reg', apexY: 70, channel: 'overhead' },
-      { id: 'gj_mae_tsf', type: 'metric-kq', from: 'me_mae', to: 'kq_tsf', apexY: 95, channel: 'overhead' },
-      { id: 'gj_rms_tsf', type: 'metric-kq', from: 'me_rms', to: 'kq_tsf', apexY: 95, channel: 'overhead' },
-    ];
-
-    // Mathematical Path Engine: Guarantees NO OVERLAPS using discrete coordinate lanes
+    // Mathematical Path Engine: Pure Perimeter routing with zero center intersections
     function calculateSmartPath(join, activeNodes) {
       const src = activeNodes[join.from];
       const dst = activeNodes[join.to];
       if (!src || !dst) return '';
 
-      // Route A: Overhead Arcs (Metrics on Right -> Questions on Top-Left)
-      // These arc cleanly above PREDICTION in nested concentric rainbow layers
+      if (layoutStyle === 'perimeter') {
+        // West Border: Algorithms (top-left) down to Families (bottom-left)
+        if (join.border === 'west') {
+          const x1 = src.x - src.w / 2;
+          const y1 = src.y;
+          const x2 = dst.x - dst.w / 2;
+          const y2 = dst.y;
+          const laneX = join.laneX || 120;
+          const r = 14;
+
+          if (lineStyle === 'orthogonal') {
+            return `M ${x1} ${y1} L ${laneX + r} ${y1} Q ${laneX} ${y1} ${laneX} ${y1 + r} L ${laneX} ${y2 - r} Q ${laneX} ${y2} ${laneX + r} ${y2} L ${x2} ${y2}`;
+          } else {
+            return `M ${x1} ${y1} C ${laneX} ${y1}, ${laneX} ${y2}, ${x2} ${y2}`;
+          }
+        }
+
+        // North Border: Algorithms (top-left) across to Questions (top-right)
+        if (join.border === 'north') {
+          const x1 = src.x;
+          const y1 = src.y - src.h / 2;
+          const x2 = dst.x;
+          const y2 = dst.y - dst.h / 2;
+          const laneY = join.laneY || 80;
+          const r = 14;
+
+          if (lineStyle === 'orthogonal') {
+            return `M ${x1} ${y1} L ${x1} ${laneY + r} Q ${x1} ${laneY} ${x1 + r} ${laneY} L ${x2 - r} ${laneY} Q ${x2} ${laneY} ${x2} ${laneY + r} L ${x2} ${y2}`;
+          } else {
+            return `M ${x1} ${y1} C ${x1} ${laneY}, ${x2} ${laneY}, ${x2} ${y2}`;
+          }
+        }
+
+        // East Border: Metrics (bottom-right) up to Questions (top-right)
+        if (join.border === 'east') {
+          const x1 = src.x + src.w / 2;
+          const y1 = src.y;
+          const x2 = dst.x + dst.w / 2;
+          const y2 = dst.y;
+          const laneX = join.laneX || 2060;
+          const r = 14;
+
+          if (lineStyle === 'orthogonal') {
+            return `M ${x1} ${y1} L ${laneX - r} ${y1} Q ${laneX} ${y1} ${laneX} ${y1 - r} L ${laneX} ${y2 + r} Q ${laneX} ${y2} ${laneX - r} ${y2} L ${x2} ${y2}`;
+          } else {
+            return `M ${x1} ${y1} C ${laneX} ${y1}, ${laneX} ${y2}, ${x2} ${y2}`;
+          }
+        }
+      }
+
+      // Fallback to Left-bus layout routing (Route A, B, C from previous version)
       if (join.channel === 'overhead') {
         const x1 = src.x - src.w / 2;
         const y1 = src.y;
         const x2 = dst.x + dst.w / 2;
         const y2 = dst.y;
         const apexY = join.apexY || 60;
-
+        const r = 16;
         if (lineStyle === 'orthogonal') {
-          // Clean architectural route across top header margin
-          const r = 16;
           return `M ${x1} ${y1} L ${x1 - 40} ${y1} Q ${x1 - 60} ${y1} ${x1 - 60} ${y1 - r} L ${x1 - 60} ${apexY + r} Q ${x1 - 60} ${apexY} ${x1 - 60 - r} ${apexY} L ${x2 + 60 + r} ${apexY} Q ${x2 + 60} ${apexY} ${x2 + 60} ${apexY + r} L ${x2 + 60} ${y2 - r} Q ${x2 + 60} ${y2} ${x2 + 40} ${y2} L ${x2} ${y2}`;
         } else {
-          // Smooth concentric high-clearance Bezier
           return `M ${x1} ${y1} C ${x1 - 250} ${apexY}, ${x2 + 250} ${apexY}, ${x2} ${y2}`;
         }
       }
 
-      // Route B & C: Left-side Multi-Lane Corridors (North to Questions, South to Families)
       if (join.channel === 'north' || join.channel === 'south') {
         const x1 = src.x - src.w / 2;
         const y1 = src.y;
@@ -797,21 +719,44 @@
         const y2 = dst.y;
         const laneX = join.laneX || 80;
         const r = 12;
-
         if (lineStyle === 'orthogonal') {
           const dir = (y2 > y1) ? 1 : -1;
           return `M ${x1} ${y1} L ${laneX + r} ${y1} Q ${laneX} ${y1} ${laneX} ${y1 + dir * r} L ${laneX} ${y2 - dir * r} Q ${laneX} ${y2} ${laneX + r} ${y2} L ${x2} ${y2}`;
         } else {
-          // Non-overlapping Bezier locked strictly into the designated lane coordinate
           return `M ${x1} ${y1} C ${laneX} ${y1}, ${laneX} ${y2}, ${x2} ${y2}`;
         }
       }
 
-      // Fallback: standard horizontal S-curve
       const x1 = src.x < dst.x ? src.x + src.w / 2 : src.x - src.w / 2;
       const x2 = src.x < dst.x ? dst.x - dst.w / 2 : dst.x + dst.w / 2;
       const dx = (x2 - x1) * 0.45;
       return `M ${x1} ${src.y} C ${x1 + dx} ${src.y}, ${x2 - dx} ${dst.y}, ${x2} ${dst.y}`;
+    }
+
+    function setLayoutStyle(style) {
+      layoutStyle = style;
+      document.getElementById('layout-perimeter').className = (style === 'perimeter')
+        ? 'px-2.5 py-1.5 rounded-lg font-medium transition-all bg-sky-600 text-white shadow-sm flex items-center gap-1.5'
+        : 'px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all flex items-center gap-1.5';
+
+      document.getElementById('layout-leftbus').className = (style === 'leftbus')
+        ? 'px-2.5 py-1.5 rounded-lg font-medium transition-all bg-sky-600 text-white shadow-sm flex items-center gap-1.5'
+        : 'px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all flex items-center gap-1.5';
+
+      const titleEl = document.getElementById('layout-badge-title');
+      const badgeEl = document.getElementById('efficiency-badge');
+      const captionEl = document.getElementById('layout-caption');
+
+      if (style === 'perimeter') {
+        titleEl.textContent = "4-Corner Perimeter Flow";
+        badgeEl.textContent = "Perimeter Flow • 0 Crossings";
+        captionEl.innerHTML = '<span class="text-emerald-400 font-semibold">Zero-Overlap:</span> Connections run purely along the 3 outer margins of the paper. Center is completely clear!';
+      } else {
+        titleEl.textContent = "Side-Bus Architecture";
+        badgeEl.textContent = "18 Lines • 0 Overlaps";
+        captionEl.innerHTML = '<span class="text-emerald-400 font-semibold">Side-Bus:</span> Algorithm highways on the left, high arching overhead metrics.';
+      }
+      renderCanvas();
     }
 
     // Main Canvas Render Loop
@@ -828,29 +773,62 @@
       nodesGroup.innerHTML = '';
       corridorsGroup.innerHTML = '';
 
-      const activeNodes = (groupingMode === 'combined') ? combinedNodes : granularNodes;
-      const activeBranches = (groupingMode === 'combined') ? combinedSolidBranches : granularSolidBranches;
-      const activeDashedJoins = (groupingMode === 'combined') ? combinedDashedJoins : granularDashedJoins;
-      const activeSteps = (groupingMode === 'combined') ? combinedWizardSteps : combinedWizardSteps;
+      let activeNodes, activeBranches, activeDashedJoins;
 
-      // 0. Render Lane Track Guides (Visual proof of zero overlapping lines)
+      if (layoutStyle === 'perimeter') {
+        activeNodes = perimeterCombinedNodes;
+        activeBranches = perimeterSolidBranches;
+        activeDashedJoins = perimeterCombinedJoins;
+      } else {
+        activeNodes = (groupingMode === 'combined') ? combinedNodes : granularNodes;
+        activeBranches = (groupingMode === 'combined') ? combinedSolidBranches : granularSolidBranches;
+        activeDashedJoins = (groupingMode === 'combined') ? combinedDashedJoins : granularDashedJoins;
+      }
+
+      const activeSteps = combinedWizardSteps;
+
+      // 0. Render Lane Track Guides (Visual proof of non-crossing channels)
       if (lineStyle === 'orthogonal') {
-        const laneTracks = [
-          { x: 60,  label: 'Lane Q1 (Cls) & F3 (DL)', color: '#38bdf8' },
-          { x: 100, label: 'Lane Q2 (Reg) & F2 (ML)', color: '#38bdf8' },
-          { x: 140, label: 'Lane Q3 (TS) & F1 (Stats)', color: '#38bdf8' },
-        ];
-        laneTracks.forEach(track => {
-          const lineEl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-          lineEl.setAttribute('x1', track.x);
-          lineEl.setAttribute('y1', 120);
-          lineEl.setAttribute('x2', track.x);
-          lineEl.setAttribute('y2', 1160);
-          lineEl.setAttribute('stroke', '#334155');
-          lineEl.setAttribute('stroke-width', '1');
-          lineEl.setAttribute('stroke-dasharray', '3 3');
-          corridorsGroup.appendChild(lineEl);
-        });
+        if (layoutStyle === 'perimeter') {
+          // Subtle border tracks on West, North, and East
+          const borderTracks = [
+            { x1: 160, y1: 220, x2: 160, y2: 900 },
+            { x1: 110, y1: 420, x2: 110, y2: 1000 },
+            { x1: 60,  y1: 560, x2: 60,  y2: 1100 },
+            { x1: 350, y1: 130, x2: 1850, y2: 130 },
+            { x1: 350, y1: 90,  x2: 1850, y2: 90 },
+            { x1: 350, y1: 50,  x2: 1850, y2: 50 },
+            { x1: 2040, y1: 220, x2: 2040, y2: 880 },
+            { x1: 2085, y1: 310, x2: 2085, y2: 1000 },
+            { x1: 2130, y1: 310, x2: 2130, y2: 1110 },
+          ];
+          borderTracks.forEach(tr => {
+            const lineEl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            lineEl.setAttribute('x1', tr.x1);
+            lineEl.setAttribute('y1', tr.y1);
+            lineEl.setAttribute('x2', tr.x2);
+            lineEl.setAttribute('y2', tr.y2);
+            lineEl.setAttribute('stroke', '#334155');
+            lineEl.setAttribute('stroke-width', '1');
+            lineEl.setAttribute('stroke-dasharray', '3 3');
+            corridorsGroup.appendChild(lineEl);
+          });
+        } else {
+          const laneTracks = [
+            { x: 60 }, { x: 100 }, { x: 140 }
+          ];
+          laneTracks.forEach(track => {
+            const lineEl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            lineEl.setAttribute('x1', track.x);
+            lineEl.setAttribute('y1', 120);
+            lineEl.setAttribute('x2', track.x);
+            lineEl.setAttribute('y2', 1160);
+            lineEl.setAttribute('stroke', '#334155');
+            lineEl.setAttribute('stroke-width', '1');
+            lineEl.setAttribute('stroke-dasharray', '3 3');
+            corridorsGroup.appendChild(lineEl);
+          });
+        }
       }
 
       // 1. Render Solid Branches
@@ -872,9 +850,8 @@
         solidGroup.appendChild(pathEl);
       });
 
-      // 2. Render Dashed Relational Highway Joins
+      // 2. Render Dashed Relational Joins
       activeDashedJoins.forEach(join => {
-        // Layer filter check
         if (layerFilter !== 'all' && join.type !== layerFilter) {
           return;
         }
@@ -917,11 +894,7 @@
         }
 
         if (shouldShow) {
-          if (join.channel === 'overhead') {
-            overheadGroup.appendChild(pathEl);
-          } else {
-            leftJoinGroup.appendChild(pathEl);
-          }
+          leftJoinGroup.appendChild(pathEl);
         }
       });
 
@@ -965,17 +938,18 @@
         rect.setAttribute('filter', 'url(#nodeShadow)');
         g.appendChild(rect);
 
-        // Connection Port Dot on the Left edge (indicating discrete non-overlapping connection point)
+        // Connection Port Dot
         if (node.category === 'al' || node.category === 'kq' || node.category === 'ft') {
           const port = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          port.setAttribute('cx', -node.w / 2);
+          const portX = (layoutStyle === 'perimeter' && node.category === 'kq') ? node.w / 2 : -node.w / 2;
+          port.setAttribute('cx', portX);
           port.setAttribute('cy', 0);
           port.setAttribute('r', 3.5);
           port.setAttribute('fill', style.stroke);
           g.appendChild(port);
         }
 
-        // Multi-line Text or Single Label
+        // Text rendering
         if (node.subtext) {
           const textMain = document.createElementNS('http://www.w3.org/2000/svg', 'text');
           textMain.setAttribute('text-anchor', 'middle');
@@ -1020,127 +994,16 @@
       });
     }
 
-    // UI Interactive Event Handlers
-    function setGroupingMode(mode) {
-      groupingMode = mode;
-      document.getElementById('mode-combined').className = mode === 'combined'
-        ? 'px-2.5 py-1.5 rounded-lg font-medium transition-all bg-emerald-600 text-white shadow-sm flex items-center gap-1.5'
-        : 'px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all flex items-center gap-1.5';
-
-      document.getElementById('mode-granular').className = mode === 'granular'
-        ? 'px-2.5 py-1.5 rounded-lg font-medium transition-all bg-sky-600 text-white shadow-sm flex items-center gap-1.5'
-        : 'px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all flex items-center gap-1.5';
-
-      const toast = document.getElementById('toast-text');
-      const badge = document.getElementById('efficiency-badge');
-
-      if (mode === 'combined') {
-        toast.textContent = "Combined Mode: 18 lines routed through parallel non-overlapping tracks. Perfect for paper!";
-        badge.textContent = "18 Lines • 0 Overlaps";
-      } else {
-        toast.textContent = "Granular Mode: All 24 individual methods and metrics displayed with dedicated lane spacing.";
-        badge.textContent = "Granular Architecture";
-      }
-
-      selectedNodeId = null;
-      renderCanvas();
-    }
-
-    function setLayerFilter(filter) {
-      layerFilter = filter;
-      ['all', 'algo-kq', 'algo-fam', 'metric-kq'].forEach(f => {
-        const btn = document.getElementById(`flt-${f}`);
-        if (f === filter) {
-          btn.className = 'px-2 py-1 rounded-md text-[11px] font-medium bg-slate-800 text-white';
-        } else {
-          btn.className = 'px-2 py-1 rounded-md text-[11px] text-slate-400 hover:bg-slate-900';
-        }
-      });
-      renderCanvas();
-    }
-
-    function setLineStyle(style) {
-      lineStyle = style;
-      document.getElementById('style-ortho').className = style === 'orthogonal'
-        ? 'px-2.5 py-1 rounded-md text-[11px] font-medium bg-sky-600 text-white flex items-center gap-1'
-        : 'px-2.5 py-1 rounded-md text-[11px] text-slate-300 hover:bg-slate-900 flex items-center gap-1';
-
-      document.getElementById('style-bezier').className = style === 'bezier'
-        ? 'px-2.5 py-1 rounded-md text-[11px] font-medium bg-sky-600 text-white flex items-center gap-1'
-        : 'px-2.5 py-1 rounded-md text-[11px] text-slate-300 hover:bg-slate-900 flex items-center gap-1';
-
-      renderCanvas();
-    }
-
-    function toggleWalkthrough() {
-      isWalkthrough = !isWalkthrough;
-      const walkthroughBar = document.getElementById('walkthrough-bar');
-      const wizardBtn = document.getElementById('mode-wizard');
-
-      if (isWalkthrough) {
-        walkthroughBar.classList.remove('hidden');
-        wizardBtn.classList.add('bg-amber-600', 'text-white');
-        wizardStep = 1;
-        updateWizardUI();
-      } else {
-        walkthroughBar.classList.add('hidden');
-        wizardBtn.classList.remove('bg-amber-600', 'text-white');
-      }
-      renderCanvas();
-    }
-
-    function updateWizardUI() {
-      const activeSteps = combinedWizardSteps;
-      const step = activeSteps[wizardStep - 1];
-      if (!step) return;
-
-      document.getElementById('wizard-step-badge').textContent = `Step ${wizardStep} of ${activeSteps.length}`;
-      document.getElementById('wizard-step-title').textContent = step.title;
-      document.getElementById('wizard-step-action').textContent = step.action;
-      document.getElementById('toast-text').textContent = step.action;
-
-      if (step.node) {
-        inspectNode(step.node);
-      }
-    }
-
-    function nextWizardStep() {
-      if (wizardStep < combinedWizardSteps.length) {
-        wizardStep++;
-        updateWizardUI();
-        renderCanvas();
-      }
-    }
-
-    function prevWizardStep() {
-      if (wizardStep > 1) {
-        wizardStep--;
-        updateWizardUI();
-        renderCanvas();
-      }
-    }
-
-    function handleNodeHover(nodeId) {
-      if (isWalkthrough) return;
-      hoveredNodeId = nodeId;
-      renderCanvas();
-    }
-
-    function handleNodeLeave() {
-      if (isWalkthrough) return;
-      hoveredNodeId = null;
-      renderCanvas();
-    }
-
-    function handleNodeClick(nodeId) {
-      selectedNodeId = (selectedNodeId === nodeId) ? null : nodeId;
-      inspectNode(nodeId);
-      renderCanvas();
-    }
-
     function inspectNode(nodeId) {
-      const activeNodes = (groupingMode === 'combined') ? combinedNodes : granularNodes;
-      const activeDashed = (groupingMode === 'combined') ? combinedDashedJoins : granularDashedJoins;
+      let activeNodes, activeDashed;
+      if (layoutStyle === 'perimeter') {
+        activeNodes = perimeterCombinedNodes;
+        activeDashed = perimeterCombinedJoins;
+      } else {
+        activeNodes = (groupingMode === 'combined') ? combinedNodes : granularNodes;
+        activeDashed = (groupingMode === 'combined') ? combinedDashedJoins : granularDashedJoins;
+      }
+
       const node = activeNodes[nodeId];
       if (!node) return;
 
