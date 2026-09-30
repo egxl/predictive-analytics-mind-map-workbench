@@ -7,23 +7,15 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          }
-        }
-      }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    * { box-sizing: border-box; }
     body {
       font-family: 'Inter', sans-serif;
       user-select: none;
+      background-color: #020617;
+      color: #f8fafc;
+      overflow: hidden;
     }
     .join-line {
       transition: stroke 0.2s ease, stroke-width 0.2s ease, opacity 0.25s ease;
@@ -31,23 +23,23 @@
     .join-line.highlighted {
       stroke-width: 3.5px !important;
       opacity: 1 !important;
-      filter: drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.6));
+      filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.8));
     }
     .join-line.dimmed {
-      opacity: 0.03 !important;
+      opacity: 0.05 !important;
     }
     .map-node {
       transition: transform 0.15s ease, filter 0.15s ease, opacity 0.2s ease;
       cursor: pointer;
     }
     .map-node:hover {
-      filter: drop-shadow(0px 6px 14px rgba(0, 0, 0, 0.45));
+      filter: drop-shadow(0px 8px 18px rgba(0, 0, 0, 0.6));
     }
     .map-node.dimmed {
-      opacity: 0.12;
+      opacity: 0.15;
     }
     .map-node.active-walkthrough {
-      filter: drop-shadow(0px 0px 16px rgba(56, 189, 248, 0.85));
+      filter: drop-shadow(0px 0px 18px rgba(56, 189, 248, 0.9));
     }
     .custom-scrollbar::-webkit-scrollbar {
       width: 6px;
@@ -65,7 +57,7 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 h-screen w-screen overflow-hidden flex flex-col">
+<body class="h-screen w-screen flex flex-col">
 
   <!-- Top Application Control Bar -->
   <header class="bg-slate-900/95 border-b border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 z-30 shadow-md">
@@ -85,7 +77,7 @@
     <!-- Center: Interactive Controls & Filters -->
     <div class="flex flex-wrap items-center gap-2 text-xs">
       
-      <!-- Layout Style Switcher: Perimeter vs Left-Bus -->
+      <!-- Layout Style Switcher: Perimeter vs Side-Bus -->
       <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800">
         <button onclick="setLayoutStyle('perimeter')" id="layout-perimeter" class="px-2.5 py-1.5 rounded-lg font-medium transition-all bg-sky-600 text-white shadow-sm flex items-center gap-1.5">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9h6v6H9z"/></svg>
@@ -97,7 +89,7 @@
         </button>
       </div>
 
-      <!-- Grouping Switcher -->
+      <!-- Grouping Mode Switcher -->
       <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800">
         <button onclick="setGroupingMode('combined')" id="mode-combined" class="px-2.5 py-1.5 rounded-lg font-medium transition-all bg-emerald-600 text-white shadow-sm flex items-center gap-1.5">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
@@ -210,7 +202,7 @@
       </div>
 
       <!-- Main SVG Canvas Surface (Expanded 2200 x 1350 for Generous Clearance) -->
-      <svg id="mindmap-svg" class="w-full h-full" viewBox="0 0 2200 1350" preserveAspectRatio="xMidYMid meet">
+      <svg id="mindmap-svg" class="w-full h-full block" viewBox="0 0 2200 1350" preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id="centerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stop-color="#0284c7" />
@@ -219,27 +211,13 @@
           <filter id="nodeShadow" x="-20%" y="-20%" width="140%" height="140%">
             <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.45"/>
           </filter>
-          <!-- Jump bridge halo filter to create visual clearance where lines intersect -->
-          <filter id="bridgeHalo" x="-20%" y="-20%" width="140%" height="140%">
-            <feStroke flood-color="#020617" stroke-width="5"/>
-          </filter>
         </defs>
 
         <g id="grid-group" opacity="0.06"></g>
-        
-        <!-- Lane Guide Highways (Subtle background paths showing the non-overlapping channels) -->
         <g id="corridors-group" opacity="0.15"></g>
-        
-        <!-- Overhead Metric Arcs (Routed high above the central node) -->
         <g id="overhead-joins-group"></g>
-        
-        <!-- Solid Branches of the Mind Map Hierarchy -->
         <g id="solid-branches-group"></g>
-        
-        <!-- Left Side Parallel Highway Channels -->
         <g id="left-joins-group"></g>
-        
-        <!-- Node Boxes & Content Groups -->
         <g id="nodes-group"></g>
       </svg>
     </main>
@@ -392,7 +370,7 @@
               </td>
               <td class="py-2.5 px-3 text-amber-300 font-medium">Statistics</td>
               <td class="py-2.5 px-3 text-sky-400 font-medium">Regression</td>
-              <td class="py-2.5 px-3 text-slate-400 font-mono">Lane Q2 (X: 100) & Lane F1 (X: 140)</td>
+              <td class="py-2.5 px-3 text-slate-400 font-mono">West Lane (X: 160) & North Lane (Y: 90)</td>
             </tr>
             <tr class="hover:bg-slate-800/40">
               <td class="py-2.5 px-3">
@@ -401,7 +379,7 @@
               </td>
               <td class="py-2.5 px-3 text-amber-300 font-medium">Statistics</td>
               <td class="py-2.5 px-3 text-emerald-400 font-medium">Classification</td>
-              <td class="py-2.5 px-3 text-slate-400 font-mono">Lane Q1 (X: 60) & Lane F1 (X: 140)</td>
+              <td class="py-2.5 px-3 text-slate-400 font-mono">West Lane (X: 160) & North Lane (Y: 130)</td>
             </tr>
             <tr class="hover:bg-slate-800/40">
               <td class="py-2.5 px-3">
@@ -410,7 +388,7 @@
               </td>
               <td class="py-2.5 px-3 text-amber-300 font-medium">Statistics</td>
               <td class="py-2.5 px-3 text-indigo-400 font-medium">Time series forecasting</td>
-              <td class="py-2.5 px-3 text-slate-400 font-mono">Lane Q3 (X: 140) & Lane F1 (X: 140)</td>
+              <td class="py-2.5 px-3 text-slate-400 font-mono">West Lane (X: 160) & North Lane (Y: 50)</td>
             </tr>
             <tr class="hover:bg-slate-800/40 bg-emerald-950/20">
               <td class="py-2.5 px-3">
@@ -419,7 +397,7 @@
               </td>
               <td class="py-2.5 px-3 text-amber-300 font-medium">Machine learning</td>
               <td class="py-2.5 px-3 text-white font-semibold">Classification + Regression</td>
-              <td class="py-2.5 px-3 text-slate-400 font-mono">Lanes Q1, Q2 & Lane F2 (X: 100)</td>
+              <td class="py-2.5 px-3 text-slate-400 font-mono">West Lane (X: 110) & North Lanes (Y: 130, 90)</td>
             </tr>
             <tr class="hover:bg-slate-800/40">
               <td class="py-2.5 px-3">
@@ -428,7 +406,7 @@
               </td>
               <td class="py-2.5 px-3 text-amber-300 font-medium">Machine learning</td>
               <td class="py-2.5 px-3 text-white">Classification + Regression</td>
-              <td class="py-2.5 px-3 text-slate-400 font-mono">Lanes Q1, Q2 & Lane F2 (X: 100)</td>
+              <td class="py-2.5 px-3 text-slate-400 font-mono">West Lane (X: 110) & North Lanes (Y: 130, 90)</td>
             </tr>
             <tr class="hover:bg-slate-800/40 bg-purple-950/20">
               <td class="py-2.5 px-3">
@@ -437,7 +415,7 @@
               </td>
               <td class="py-2.5 px-3 text-purple-300 font-medium">Deep learning</td>
               <td class="py-2.5 px-3 text-white font-semibold">Classification + Regression + Time Series</td>
-              <td class="py-2.5 px-3 text-slate-400 font-mono">Lanes Q1, Q2, Q3 & Lane F3 (X: 60)</td>
+              <td class="py-2.5 px-3 text-slate-400 font-mono">West Lane (X: 60) & North Lanes (Y: 130, 90, 50)</td>
             </tr>
           </tbody>
         </table>
@@ -445,8 +423,8 @@
     </div>
   </div>
 
-  <!-- Main JavaScript Logic Engine -->
   <script>
+    // State management
     let layoutStyle = 'perimeter'; // 'perimeter' (4-corners) or 'leftbus'
     let groupingMode = 'combined'; // 'combined' or 'granular'
     let layerFilter = 'all';       // 'all', 'algo-kq', 'algo-fam', 'metric-kq'
@@ -467,152 +445,101 @@
     };
 
     const joinColors = {
-      'algo-fam':  '#f59e0b', // Amber/Orange
+      'algo-fam':  '#f59e0b', // Amber
       'algo-kq':   '#38bdf8', // Sky Blue
       'metric-kq': '#34d399', // Emerald Green
     };
 
-    // 4-CORNER PERIMETER NODES (Zero lines through center, minimal line lengths)
+    // 4-CORNER PERIMETER NODES
     const perimeterCombinedNodes = {
-      // Center
-      root: { id: 'root', label: 'PREDICTION', sub: 'Central Concept', category: 'root', x: 1100, y: 700, w: 180, h: 52 },
+      root: { id: 'root', label: 'PREDICTION', sub: 'Central Concept', category: 'root', x: 1100, y: 680, w: 200, h: 54 },
+      b_al: { id: 'b_al', label: 'Algorithms', sub: 'Top-Left Corner', category: 'branch', x: 670, y: 440, w: 160, h: 42 },
+      b_ft: { id: 'b_ft', label: 'Family of technique', sub: 'Bottom-Left Corner', category: 'branch', x: 670, y: 920, w: 190, h: 42 },
+      b_kq: { id: 'b_kq', label: 'Kind of question', sub: 'Top-Right Corner', category: 'branch', x: 1530, y: 440, w: 180, h: 42 },
+      b_me: { id: 'b_me', label: 'Metrics', sub: 'Bottom-Right Corner', category: 'branch', x: 1530, y: 920, w: 160, h: 42 },
 
-      // Four Corner Diagonal Branch Hubs
-      b_al: { id: 'b_al', label: 'Algorithms', sub: 'Top-Left Corner', category: 'branch', x: 640, y: 440, w: 160, h: 42 },
-      b_ft: { id: 'b_ft', label: 'Family of technique', sub: 'Bottom-Left Corner', category: 'branch', x: 640, y: 960, w: 190, h: 42 },
-      b_kq: { id: 'b_kq', label: 'Kind of question', sub: 'Top-Right Corner', category: 'branch', x: 1560, y: 440, w: 180, h: 42 },
-      b_me: { id: 'b_me', label: 'Metrics', sub: 'Bottom-Right Corner', category: 'branch', x: 1560, y: 960, w: 160, h: 42 },
-
-      // Branch 1: Algorithms (Top-Left Column: X: 350)
+      // Branch: Algorithms (Top-Left)
       al_linear: {
-        id: 'al_linear',
-        label: 'Linear & Regularized Models',
-        subtext: 'Linear Reg • Ridge • Lasso • Elastic Net',
-        category: 'al',
-        x: 350, y: 220, w: 250, h: 48,
-        family: 'Statistics',
-        questions: ['Regression'],
-        desc: 'Group of 4 linear methods predicting continuous numbers via feature weights.',
+        id: 'al_linear', label: 'Linear & Regularized Models', subtext: 'Linear Reg • Ridge • Lasso • Elastic Net',
+        category: 'al', x: 380, y: 200, w: 260, h: 48, family: 'Statistics', questions: ['Regression'],
+        desc: 'Group of 4 linear methods predicting continuous numbers via feature weights.'
       },
       al_prob: {
-        id: 'al_prob',
-        label: 'Probabilistic Classifiers',
-        subtext: 'Logistic Regression • Naive Bayes',
-        category: 'al',
-        x: 350, y: 290, w: 240, h: 46,
-        family: 'Statistics',
-        questions: ['Classification'],
-        desc: 'Statistical methods producing class probabilities via sigmoid or Bayes rule.',
+        id: 'al_prob', label: 'Probabilistic Classifiers', subtext: 'Logistic Regression • Naive Bayes',
+        category: 'al', x: 380, y: 270, w: 250, h: 46, family: 'Statistics', questions: ['Classification'],
+        desc: 'Statistical methods producing class probabilities via sigmoid or Bayes rule.'
       },
       al_ts: {
-        id: 'al_ts',
-        label: 'Temporal Sequence Model',
-        subtext: 'ARIMA (Autoregressive Int. Moving Avg)',
-        category: 'al',
-        x: 350, y: 355, w: 245, h: 44,
-        family: 'Statistics',
-        questions: ['Time series forecasting'],
-        desc: 'Specialized statistical model leveraging temporal lags and differencing.',
+        id: 'al_ts', label: 'Temporal Sequence Model', subtext: 'ARIMA (Autoregressive Int. Moving Avg)',
+        category: 'al', x: 380, y: 340, w: 250, h: 44, family: 'Statistics', questions: ['Time series forecasting'],
+        desc: 'Specialized statistical model leveraging temporal lags and differencing.'
       },
       al_tree: {
-        id: 'al_tree',
-        label: 'Tree Models & Ensembles',
-        subtext: 'Decision Tree • Random Forest • Gradient Boost',
-        category: 'al',
-        x: 350, y: 425, w: 265, h: 50,
-        family: 'Machine learning',
-        questions: ['Classification', 'Regression'],
-        desc: 'Recursive partitioning and bagging/boosting ensembles. Solves BOTH Classification and Regression!',
+        id: 'al_tree', label: 'Tree Models & Ensembles', subtext: 'Decision Tree • Random Forest • Gradient Boost',
+        category: 'al', x: 380, y: 415, w: 270, h: 50, family: 'Machine learning', questions: ['Classification', 'Regression'],
+        desc: 'Recursive partitioning and bagging/boosting ensembles. Solves BOTH Classification and Regression!'
       },
       al_geom: {
-        id: 'al_geom',
-        label: 'Margin & Distance ML',
-        subtext: 'Support Vector Machine (SVM) • k-NN',
-        category: 'al',
-        x: 350, y: 495, w: 245, h: 46,
-        family: 'Machine learning',
-        questions: ['Classification', 'Regression'],
-        desc: 'Geometric separating boundaries (SVM) and local neighborhood voting (k-NN).',
+        id: 'al_geom', label: 'Margin & Distance ML', subtext: 'Support Vector Machine (SVM) • k-NN',
+        category: 'al', x: 380, y: 490, w: 250, h: 46, family: 'Machine learning', questions: ['Classification', 'Regression'],
+        desc: 'Geometric separating boundaries (SVM) and local neighborhood voting (k-NN).'
       },
       al_nn: {
-        id: 'al_nn',
-        label: 'Deep Representation',
-        subtext: 'Neural Network (Multi-Layer Perceptron)',
-        category: 'al',
-        x: 350, y: 565, w: 255, h: 48,
-        family: 'Deep learning',
-        questions: ['Classification', 'Regression', 'Time series forecasting'],
-        desc: 'Stacked interconnected artificial neurons; universal approximator across all 3 problem types.',
+        id: 'al_nn', label: 'Deep Representation', subtext: 'Neural Network (Multi-Layer Perceptron)',
+        category: 'al', x: 380, y: 565, w: 260, h: 48, family: 'Deep learning', questions: ['Classification', 'Regression', 'Time series forecasting'],
+        desc: 'Stacked interconnected artificial neurons; universal approximator across all 3 problem types.'
       },
 
-      // Branch 2: Family of Technique (Bottom-Left Column: X: 350)
-      ft_sta: { id: 'ft_sta', label: 'Statistics', category: 'ft', x: 350, y: 880, w: 170, h: 42, desc: 'Probabilistic models, parameter estimation, interpretable feature weights.' },
-      ft_ml:  { id: 'ft_ml',  label: 'Machine learning', category: 'ft', x: 350, y: 980, w: 180, h: 42, desc: 'Iterative optimization, recursive rule splitting, margin boundaries.' },
-      ft_dl:  { id: 'ft_dl',  label: 'Deep learning', category: 'ft', x: 350, y: 1080, w: 170, h: 42, desc: 'Multi-layer neural networks learning hierarchical representations.' },
+      // Branch: Family of Technique (Bottom-Left)
+      ft_sta: { id: 'ft_sta', label: 'Statistics', category: 'ft', x: 380, y: 840, w: 170, h: 42, desc: 'Probabilistic models, parameter estimation, interpretable feature weights.' },
+      ft_ml:  { id: 'ft_ml',  label: 'Machine learning', category: 'ft', x: 380, y: 940, w: 180, h: 42, desc: 'Iterative optimization, recursive rule splitting, margin boundaries.' },
+      ft_dl:  { id: 'ft_dl',  label: 'Deep learning', category: 'ft', x: 380, y: 1040, w: 170, h: 42, desc: 'Multi-layer neural networks learning hierarchical representations.' },
 
-      // Branch 3: Kind of Question (Top-Right Column: X: 1850)
-      kq_cls: { id: 'kq_cls', label: 'Classification', category: 'kq', x: 1850, y: 220, w: 170, h: 42, desc: 'Categorical discrete prediction (e.g., Churn yes/no, customer segment).' },
-      kq_reg: { id: 'kq_reg', label: 'Regression', category: 'kq', x: 1850, y: 310, w: 170, h: 42, desc: 'Continuous numerical value prediction (e.g., House price, customer spend).' },
-      kq_tsf: { id: 'kq_tsf', label: 'Time series forecasting', category: 'kq', x: 1850, y: 400, w: 195, h: 42, desc: 'Ordered chronological sequence prediction (e.g., Monthly unit sales).' },
+      // Branch: Kind of Question (Top-Right)
+      kq_cls: { id: 'kq_cls', label: 'Classification', category: 'kq', x: 1820, y: 200, w: 180, h: 44, desc: 'Categorical discrete prediction (e.g., Churn yes/no, customer segment).' },
+      kq_reg: { id: 'kq_reg', label: 'Regression', category: 'kq', x: 1820, y: 290, w: 180, h: 44, desc: 'Continuous numerical value prediction (e.g., House price, customer spend).' },
+      kq_tsf: { id: 'kq_tsf', label: 'Time series forecasting', category: 'kq', x: 1820, y: 380, w: 210, h: 44, desc: 'Ordered chronological sequence prediction (e.g., Monthly unit sales).' },
 
-      // Branch 4: Metrics (Bottom-Right Column: X: 1850)
+      // Branch: Metrics (Bottom-Right)
       me_cls_suite: {
-        id: 'me_cls_suite',
-        label: 'Classification Metric Suite',
-        subtext: 'Accuracy • Precision • Recall • Specificity • NPV • F1',
-        category: 'me',
-        x: 1850, y: 860, w: 290, h: 68,
-        questions: ['Classification'],
-        desc: 'All 6 metrics derived from confusion matrix (TP, TN, FP, FN). Evaluates discrete classification.',
+        id: 'me_cls_suite', label: 'Classification Metric Suite', subtext: 'Accuracy • Precision • Recall • Specificity • NPV • F1',
+        category: 'me', x: 1820, y: 830, w: 300, h: 68, questions: ['Classification'],
+        desc: 'All 6 metrics derived from confusion matrix (TP, TN, FP, FN). Evaluates discrete classification.'
       },
       me_err_suite: {
-        id: 'me_err_suite',
-        label: 'Continuous Error Suite',
-        subtext: 'MAE • MSE • RMSE • MAPE',
-        category: 'me',
-        x: 1850, y: 980, w: 270, h: 62,
-        questions: ['Regression', 'Time series forecasting'],
-        desc: 'Summary error statistics of |actual - predicted|. Evaluates both Regression and Time Series Forecasting.',
+        id: 'me_err_suite', label: 'Continuous Error Suite', subtext: 'MAE • MSE • RMSE • MAPE',
+        category: 'me', x: 1820, y: 950, w: 280, h: 62, questions: ['Regression', 'Time series forecasting'],
+        desc: 'Summary error statistics of |actual - predicted|. Evaluates both Regression and Time Series Forecasting.'
       },
       me_r2: {
-        id: 'me_r2',
-        label: 'Variance Explained (R²)',
-        subtext: 'Coefficient of Determination (1 - SSres/SStot)',
-        category: 'me',
-        x: 1850, y: 1090, w: 250, h: 48,
-        questions: ['Regression'],
-        desc: 'Proportion of target variance explained by input features. Specific to cross-sectional Regression.',
+        id: 'me_r2', label: 'Variance Explained (R²)', subtext: 'Coefficient of Determination (1 - SSres/SStot)',
+        category: 'me', x: 1820, y: 1060, w: 260, h: 48, questions: ['Regression'],
+        desc: 'Proportion of target variance explained by input features. Specific to cross-sectional Regression.'
       }
     };
 
-    // Joins for 4-Corner Perimeter Layout:
-    // West border (Algo -> Fam), North border (Algo -> Question), East border (Metric -> Question)
     const perimeterCombinedJoins = [
-      // ALGO -> FAMILIES (West Border Channels: X = 160, 110, 60)
+      // ALGO -> FAMILIES (West Margin Channels)
       { id: 'pj_lin_sta',  type: 'algo-fam', from: 'al_linear', to: 'ft_sta', border: 'west', laneX: 160 },
       { id: 'pj_prob_sta', type: 'algo-fam', from: 'al_prob',   to: 'ft_sta', border: 'west', laneX: 160 },
       { id: 'pj_ts_sta',   type: 'algo-fam', from: 'al_ts',     to: 'ft_sta', border: 'west', laneX: 160 },
+      { id: 'pj_tree_ml',  type: 'algo-fam', from: 'al_tree',   to: 'ft_ml',  border: 'west', laneX: 110 },
+      { id: 'pj_geom_ml',  type: 'algo-fam', from: 'al_geom',   to: 'ft_ml',  border: 'west', laneX: 110 },
+      { id: 'pj_nn_dl',    type: 'algo-fam', from: 'al_nn',     to: 'ft_dl',  border: 'west', laneX: 60 },
 
-      { id: 'pj_tree_ml',  type: 'algo-fam', from: 'al_tree', to: 'ft_ml',  border: 'west', laneX: 110 },
-      { id: 'pj_geom_ml',  type: 'algo-fam', from: 'al_geom', to: 'ft_ml',  border: 'west', laneX: 110 },
-
-      { id: 'pj_nn_dl',    type: 'algo-fam', from: 'al_nn',   to: 'ft_dl',  border: 'west', laneX: 60 },
-
-      // ALGO -> QUESTIONS (North Border Channels: Y = 130, 90, 50)
-      { id: 'pj_prob_cls', type: 'algo-kq', from: 'al_prob', to: 'kq_cls', border: 'north', laneY: 130 },
-      { id: 'pj_tree_cls', type: 'algo-kq', from: 'al_tree', to: 'kq_cls', border: 'north', laneY: 130 },
-      { id: 'pj_geom_cls', type: 'algo-kq', from: 'al_geom', to: 'kq_cls', border: 'north', laneY: 130 },
-      { id: 'pj_nn_cls',   type: 'algo-kq', from: 'al_nn',   to: 'kq_cls', border: 'north', laneY: 130 },
-
+      // ALGO -> QUESTIONS (North Margin Channels)
+      { id: 'pj_prob_cls', type: 'algo-kq', from: 'al_prob',   to: 'kq_cls', border: 'north', laneY: 130 },
+      { id: 'pj_tree_cls', type: 'algo-kq', from: 'al_tree',   to: 'kq_cls', border: 'north', laneY: 130 },
+      { id: 'pj_geom_cls', type: 'algo-kq', from: 'al_geom',   to: 'kq_cls', border: 'north', laneY: 130 },
+      { id: 'pj_nn_cls',   type: 'algo-kq', from: 'al_nn',     to: 'kq_cls', border: 'north', laneY: 130 },
       { id: 'pj_lin_reg',  type: 'algo-kq', from: 'al_linear', to: 'kq_reg', border: 'north', laneY: 90 },
       { id: 'pj_tree_reg', type: 'algo-kq', from: 'al_tree',   to: 'kq_reg', border: 'north', laneY: 90 },
       { id: 'pj_geom_reg', type: 'algo-kq', from: 'al_geom',   to: 'kq_reg', border: 'north', laneY: 90 },
       { id: 'pj_nn_reg',   type: 'algo-kq', from: 'al_nn',     to: 'kq_reg', border: 'north', laneY: 90 },
+      { id: 'pj_ts_tsf',   type: 'algo-kq', from: 'al_ts',     to: 'kq_tsf', border: 'north', laneY: 50 },
+      { id: 'pj_nn_tsf',   type: 'algo-kq', from: 'al_nn',     to: 'kq_tsf', border: 'north', laneY: 50 },
 
-      { id: 'pj_ts_tsf',   type: 'algo-kq', from: 'al_ts',   to: 'kq_tsf', border: 'north', laneY: 50 },
-      { id: 'pj_nn_tsf',   type: 'algo-kq', from: 'al_nn',   to: 'kq_tsf', border: 'north', laneY: 50 },
-
-      // METRICS -> QUESTIONS (East Border Channels: X = 2040, 2085, 2130)
+      // METRICS -> QUESTIONS (East Margin Channels)
       { id: 'pj_cls_suite', type: 'metric-kq', from: 'me_cls_suite', to: 'kq_cls', border: 'east', laneX: 2040 },
       { id: 'pj_err_reg',   type: 'metric-kq', from: 'me_err_suite', to: 'kq_reg', border: 'east', laneX: 2085 },
       { id: 'pj_err_tsf',   type: 'metric-kq', from: 'me_err_suite', to: 'kq_tsf', border: 'east', laneX: 2085 },
@@ -641,14 +568,49 @@
       { from: 'b_me', to: 'me_r2' },
     ];
 
-    // Mathematical Path Engine: Pure Perimeter routing with zero center intersections
+    // SIDE-BUS ALTERNATE LAYOUT DATA
+    const sideBusNodes = JSON.parse(JSON.stringify(perimeterCombinedNodes));
+    sideBusNodes.kq_cls.x = 420; sideBusNodes.kq_cls.y = 170;
+    sideBusNodes.kq_reg.x = 420; sideBusNodes.kq_reg.y = 250;
+    sideBusNodes.kq_tsf.x = 420; sideBusNodes.kq_tsf.y = 330;
+    sideBusNodes.b_kq.x = 650;   sideBusNodes.b_kq.y = 250;
+
+    sideBusNodes.b_al.x = 650;   sideBusNodes.b_al.y = 560;
+    sideBusNodes.al_linear.x = 380; sideBusNodes.al_linear.y = 440;
+    sideBusNodes.al_prob.x = 380;   sideBusNodes.al_prob.y = 510;
+    sideBusNodes.al_ts.x = 380;     sideBusNodes.al_ts.y = 570;
+    sideBusNodes.al_tree.x = 380;   sideBusNodes.al_tree.y = 635;
+    sideBusNodes.al_geom.x = 380;   sideBusNodes.al_geom.y = 700;
+    sideBusNodes.al_nn.x = 380;     sideBusNodes.al_nn.y = 765;
+
+    sideBusNodes.b_ft.x = 650;   sideBusNodes.b_ft.y = 960;
+    sideBusNodes.ft_sta.x = 380; sideBusNodes.ft_sta.y = 900;
+    sideBusNodes.ft_ml.x = 380;  sideBusNodes.ft_ml.y = 980;
+    sideBusNodes.ft_dl.x = 380;  sideBusNodes.ft_dl.y = 1060;
+
+    const wizardSteps = [
+      { step: 1,  node: 'root', title: '1. Root Box: PREDICTION', action: 'Write PREDICTION in an oblong box in the center of your paper.' },
+      { step: 2,  branch: 'all_branches', title: '2. Four Main Branch Hubs', action: 'Draw 4 diagonal solid branches: Algorithms (NW), Families (SW), Questions (NE), Metrics (SE).' },
+      { step: 3,  node: 'al_linear', title: '3. Linear Models & Regression', action: 'Draw Linear & Regularized box. Link west to Statistics and north to Regression.' },
+      { step: 4,  node: 'al_prob', title: '4. Probabilistic Classifiers', action: 'Draw Probabilistic Classifiers. Link west to Statistics and north to Classification.' },
+      { step: 5,  node: 'al_ts', title: '5. Temporal Sequence (ARIMA)', action: 'Draw ARIMA. Link west to Statistics and north to Time series forecasting.' },
+      { step: 6,  node: 'al_tree', title: '6. Tree Models & Ensembles', action: 'Draw Trees/Forest/Boosting. Link west to Machine Learning and north to BOTH Cls & Reg!' },
+      { step: 7,  node: 'al_geom', title: '7. Margin & Distance ML', action: 'Draw SVM & k-NN. Link west to Machine Learning and north to BOTH Cls & Reg.' },
+      { step: 8,  node: 'al_nn', title: '8. Neural Network (Deep Learning)', action: 'Draw Neural Network. Link west to Deep Learning and north to all 3 Questions!' },
+      { step: 9,  node: 'ft_sta', title: '9. Family: Statistics', action: 'Verify all 3 statistical connections arrived at the Statistics box.' },
+      { step: 10, node: 'ft_ml', title: '10. Family: Machine Learning', action: 'Verify Tree and SVM/k-NN lines connect to Machine Learning.' },
+      { step: 11, node: 'me_cls_suite', title: '11. Classification Metrics', action: 'Draw Accuracy, Precision, Recall, Specificity, NPV, F1. Trace east up to Classification.' },
+      { step: 12, node: 'me_err_suite', title: '12. Continuous Error Metrics', action: 'Draw MAE, MSE, RMSE, MAPE. Trace east up to Regression and Time Series.' },
+      { step: 13, node: 'me_r2', title: '13. Variance Explained (R²)', action: 'Draw R² and connect east up to Regression. Your sheet is now complete!' }
+    ];
+
     function calculateSmartPath(join, activeNodes) {
       const src = activeNodes[join.from];
       const dst = activeNodes[join.to];
       if (!src || !dst) return '';
 
       if (layoutStyle === 'perimeter') {
-        // West Border: Algorithms (top-left) down to Families (bottom-left)
+        // West Border: Algorithms down to Families
         if (join.border === 'west') {
           const x1 = src.x - src.w / 2;
           const y1 = src.y;
@@ -664,7 +626,7 @@
           }
         }
 
-        // North Border: Algorithms (top-left) across to Questions (top-right)
+        // North Border: Algorithms across to Questions
         if (join.border === 'north') {
           const x1 = src.x;
           const y1 = src.y - src.h / 2;
@@ -680,7 +642,7 @@
           }
         }
 
-        // East Border: Metrics (bottom-right) up to Questions (top-right)
+        // East Border: Metrics up to Questions
         if (join.border === 'east') {
           const x1 = src.x + src.w / 2;
           const y1 = src.y;
@@ -697,40 +659,271 @@
         }
       }
 
-      // Fallback to Left-bus layout routing (Route A, B, C from previous version)
-      if (join.channel === 'overhead') {
-        const x1 = src.x - src.w / 2;
-        const y1 = src.y;
-        const x2 = dst.x + dst.w / 2;
-        const y2 = dst.y;
-        const apexY = join.apexY || 60;
-        const r = 16;
-        if (lineStyle === 'orthogonal') {
-          return `M ${x1} ${y1} L ${x1 - 40} ${y1} Q ${x1 - 60} ${y1} ${x1 - 60} ${y1 - r} L ${x1 - 60} ${apexY + r} Q ${x1 - 60} ${apexY} ${x1 - 60 - r} ${apexY} L ${x2 + 60 + r} ${apexY} Q ${x2 + 60} ${apexY} ${x2 + 60} ${apexY + r} L ${x2 + 60} ${y2 - r} Q ${x2 + 60} ${y2} ${x2 + 40} ${y2} L ${x2} ${y2}`;
-        } else {
-          return `M ${x1} ${y1} C ${x1 - 250} ${apexY}, ${x2 + 250} ${apexY}, ${x2} ${y2}`;
-        }
-      }
-
-      if (join.channel === 'north' || join.channel === 'south') {
-        const x1 = src.x - src.w / 2;
-        const y1 = src.y;
-        const x2 = dst.x - dst.w / 2;
-        const y2 = dst.y;
-        const laneX = join.laneX || 80;
-        const r = 12;
-        if (lineStyle === 'orthogonal') {
-          const dir = (y2 > y1) ? 1 : -1;
-          return `M ${x1} ${y1} L ${laneX + r} ${y1} Q ${laneX} ${y1} ${laneX} ${y1 + dir * r} L ${laneX} ${y2 - dir * r} Q ${laneX} ${y2} ${laneX + r} ${y2} L ${x2} ${y2}`;
-        } else {
-          return `M ${x1} ${y1} C ${laneX} ${y1}, ${laneX} ${y2}, ${x2} ${y2}`;
-        }
-      }
-
+      // Fallback simple curve
       const x1 = src.x < dst.x ? src.x + src.w / 2 : src.x - src.w / 2;
       const x2 = src.x < dst.x ? dst.x - dst.w / 2 : dst.x + dst.w / 2;
       const dx = (x2 - x1) * 0.45;
       return `M ${x1} ${src.y} C ${x1 + dx} ${src.y}, ${x2 - dx} ${dst.y}, ${x2} ${dst.y}`;
+    }
+
+    function renderCanvas() {
+      try {
+        const solidGroup = document.getElementById('solid-branches-group');
+        const leftJoinGroup = document.getElementById('left-joins-group');
+        const overheadGroup = document.getElementById('overhead-joins-group');
+        const nodesGroup = document.getElementById('nodes-group');
+        const corridorsGroup = document.getElementById('corridors-group');
+
+        if (!solidGroup || !leftJoinGroup || !nodesGroup) return;
+
+        solidGroup.innerHTML = '';
+        leftJoinGroup.innerHTML = '';
+        overheadGroup.innerHTML = '';
+        nodesGroup.innerHTML = '';
+        corridorsGroup.innerHTML = '';
+
+        const activeNodes = (layoutStyle === 'perimeter') ? perimeterCombinedNodes : sideBusNodes;
+        const activeBranches = perimeterSolidBranches;
+        const activeDashedJoins = perimeterCombinedJoins;
+
+        // 0. Render Lane Track Guides
+        if (lineStyle === 'orthogonal' && layoutStyle === 'perimeter') {
+          const borderTracks = [
+            { x1: 160, y1: 200, x2: 160, y2: 860 },
+            { x1: 110, y1: 415, x2: 110, y2: 960 },
+            { x1: 60,  y1: 565, x2: 60,  y2: 1060 },
+            { x1: 380, y1: 130, x2: 1820, y2: 130 },
+            { x1: 380, y1: 90,  x2: 1820, y2: 90 },
+            { x1: 380, y1: 50,  x2: 1820, y2: 50 },
+            { x1: 2040, y1: 200, x2: 2040, y2: 830 },
+            { x1: 2085, y1: 290, x2: 2085, y2: 950 },
+            { x1: 2130, y1: 290, x2: 2130, y2: 1060 },
+          ];
+          borderTracks.forEach(tr => {
+            const lineEl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            lineEl.setAttribute('x1', tr.x1);
+            lineEl.setAttribute('y1', tr.y1);
+            lineEl.setAttribute('x2', tr.x2);
+            lineEl.setAttribute('y2', tr.y2);
+            lineEl.setAttribute('stroke', '#334155');
+            lineEl.setAttribute('stroke-width', '1');
+            lineEl.setAttribute('stroke-dasharray', '3 3');
+            corridorsGroup.appendChild(lineEl);
+          });
+        }
+
+        // 1. Render Solid Branches
+        activeBranches.forEach(branch => {
+          const src = activeNodes[branch.from];
+          const dst = activeNodes[branch.to];
+          if (!src || !dst) return;
+
+          const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          const x1 = src.x < dst.x ? src.x + src.w / 2 : src.x - src.w / 2;
+          const x2 = src.x < dst.x ? dst.x - dst.w / 2 : dst.x + dst.w / 2;
+          const dx = (x2 - x1) * 0.4;
+
+          pathEl.setAttribute('d', `M ${x1} ${src.y} C ${x1 + dx} ${src.y}, ${x2 - dx} ${dst.y}, ${x2} ${dst.y}`);
+          pathEl.setAttribute('stroke', branch.from === 'root' ? '#94a3b8' : '#334155');
+          pathEl.setAttribute('stroke-width', branch.from === 'root' ? '2.5' : '1.75');
+          pathEl.setAttribute('fill', 'none');
+          pathEl.setAttribute('stroke-linecap', 'round');
+          solidGroup.appendChild(pathEl);
+        });
+
+        // 2. Render Dashed Relational Joins
+        activeDashedJoins.forEach(join => {
+          if (layerFilter !== 'all' && join.type !== layerFilter) return;
+
+          const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          pathEl.setAttribute('d', calculateSmartPath(join, activeNodes));
+          pathEl.setAttribute('stroke', joinColors[join.type] || '#38bdf8');
+          pathEl.setAttribute('stroke-width', '2.25');
+          pathEl.setAttribute('stroke-dasharray', '5 4');
+          pathEl.setAttribute('fill', 'none');
+          pathEl.setAttribute('class', `join-line join-${join.from} join-${join.to}`);
+          pathEl.id = `line-${join.id}`;
+
+          let shouldShow = true;
+          let isHighlighted = false;
+
+          if (isWalkthrough) {
+            const stepObj = wizardSteps[wizardStep - 1];
+            if (stepObj && stepObj.node && (join.from === stepObj.node || join.to === stepObj.node)) {
+              isHighlighted = true;
+            } else {
+              shouldShow = false;
+            }
+          } else {
+            const activeTarget = selectedNodeId || hoveredNodeId;
+            if (activeTarget) {
+              if (join.from === activeTarget || join.to === activeTarget) {
+                isHighlighted = true;
+                pathEl.setAttribute('opacity', '1');
+              } else {
+                pathEl.setAttribute('opacity', '0.04');
+              }
+            } else {
+              pathEl.setAttribute('opacity', '0.75');
+            }
+          }
+
+          if (isHighlighted) {
+            pathEl.classList.add('highlighted');
+          }
+
+          if (shouldShow) {
+            leftJoinGroup.appendChild(pathEl);
+          }
+        });
+
+        // 3. Render Node Boxes
+        Object.values(activeNodes).forEach(node => {
+          const style = categoryStyles[node.category] || categoryStyles.branch;
+          const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          g.setAttribute('class', 'map-node');
+          g.setAttribute('id', `node-${node.id}`);
+          g.setAttribute('transform', `translate(${node.x}, ${node.y})`);
+
+          if (isWalkthrough) {
+            const stepObj = wizardSteps[wizardStep - 1];
+            let isActive = false;
+            if (stepObj && stepObj.node === node.id) isActive = true;
+            if (stepObj && stepObj.branch === 'all_branches' && (node.category === 'root' || node.category === 'branch')) isActive = true;
+            if (stepObj && stepObj.branch === node.category) isActive = true;
+
+            const relevantJoins = activeDashedJoins.filter(j => stepObj && stepObj.node && (j.from === stepObj.node || j.to === stepObj.node));
+            relevantJoins.forEach(j => {
+              if (j.from === node.id || j.to === node.id) isActive = true;
+            });
+
+            if (!isActive && stepObj && stepObj.node) {
+              g.classList.add('dimmed');
+            } else if (isActive) {
+              g.classList.add('active-walkthrough');
+            }
+          }
+
+          // Node Rectangle
+          const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          rect.setAttribute('x', -node.w / 2);
+          rect.setAttribute('y', -node.h / 2);
+          rect.setAttribute('width', node.w);
+          rect.setAttribute('height', node.h);
+          rect.setAttribute('rx', node.category === 'root' ? 14 : 10);
+          rect.setAttribute('fill', style.fill);
+          rect.setAttribute('stroke', style.stroke);
+          rect.setAttribute('stroke-width', style.strokeW);
+          rect.setAttribute('filter', 'url(#nodeShadow)');
+          g.appendChild(rect);
+
+          // Labels
+          if (node.subtext) {
+            const textMain = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            textMain.setAttribute('text-anchor', 'middle');
+            textMain.setAttribute('x', 0);
+            textMain.setAttribute('y', -node.h * 0.18);
+            textMain.setAttribute('fill', style.text);
+            textMain.setAttribute('font-size', '12');
+            textMain.setAttribute('font-weight', '700');
+            textMain.textContent = node.label;
+
+            const textSub = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            textSub.setAttribute('text-anchor', 'middle');
+            textSub.setAttribute('x', 0);
+            textSub.setAttribute('y', node.h * 0.24);
+            textSub.setAttribute('fill', '#94a3b8');
+            textSub.setAttribute('font-size', '9.5');
+            textSub.setAttribute('font-weight', '500');
+            textSub.textContent = node.subtext;
+
+            g.appendChild(textMain);
+            g.appendChild(textSub);
+          } else {
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('dominant-baseline', 'central');
+            text.setAttribute('fill', style.text);
+            text.setAttribute('font-size', node.category === 'root' ? '14' : (node.category === 'branch' ? '12.5' : '11.5'));
+            text.setAttribute('font-weight', node.category === 'root' || node.category === 'branch' ? '700' : '600');
+            text.textContent = node.label;
+            g.appendChild(text);
+          }
+
+          // Event Listeners
+          g.addEventListener('mouseenter', () => handleNodeHover(node.id));
+          g.addEventListener('mouseleave', () => handleNodeLeave());
+          g.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleNodeClick(node.id);
+          });
+
+          nodesGroup.appendChild(g);
+        });
+      } catch (err) {
+        console.error('Error rendering mind map canvas:', err);
+      }
+    }
+
+    function handleNodeHover(nodeId) {
+      if (isWalkthrough) return;
+      hoveredNodeId = nodeId;
+      renderCanvas();
+    }
+
+    function handleNodeLeave() {
+      if (isWalkthrough) return;
+      hoveredNodeId = null;
+      renderCanvas();
+    }
+
+    function handleNodeClick(nodeId) {
+      if (selectedNodeId === nodeId) {
+        selectedNodeId = null;
+      } else {
+        selectedNodeId = nodeId;
+      }
+      inspectNode(nodeId);
+      renderCanvas();
+    }
+
+    function inspectNode(nodeId) {
+      const activeNodes = (layoutStyle === 'perimeter') ? perimeterCombinedNodes : sideBusNodes;
+      const node = activeNodes[nodeId];
+      if (!node) return;
+
+      const titleEl = document.getElementById('inspector-title');
+      const descEl = document.getElementById('inspector-desc');
+      const linksContainer = document.getElementById('inspector-links');
+
+      titleEl.textContent = node.label;
+      let desc = node.desc || node.sub || 'Mind map component.';
+      if (node.subtext) {
+        desc += ` (${node.subtext})`;
+      }
+      descEl.textContent = desc;
+
+      const relJoins = perimeterCombinedJoins.filter(j => j.from === nodeId || j.to === nodeId);
+      if (relJoins.length > 0) {
+        linksContainer.classList.remove('hidden');
+        linksContainer.innerHTML = '<span class="font-semibold text-slate-300">Pencil Connections to Draw:</span>';
+        relJoins.forEach(j => {
+          const targetId = j.from === nodeId ? j.to : j.from;
+          const targetNode = activeNodes[targetId];
+          if (!targetNode) return;
+
+          const badgeClass = j.type === 'algo-fam' ? 'text-amber-400 border-amber-800 bg-amber-950/40' :
+                             (j.type === 'algo-kq' ? 'text-sky-400 border-sky-800 bg-sky-950/40' : 'text-emerald-400 border-emerald-800 bg-emerald-950/40');
+          const typeLabel = j.type === 'algo-fam' ? 'Family of Technique' : (j.type === 'algo-kq' ? 'Kind of Question' : 'Evaluates Question');
+
+          const item = document.createElement('div');
+          item.className = `p-1.5 rounded border ${badgeClass} flex items-center justify-between text-[11px]`;
+          item.innerHTML = `<span><strong>${targetNode.label}</strong></span> <span class="text-[10px] opacity-75">${typeLabel}</span>`;
+          linksContainer.appendChild(item);
+        });
+      } else {
+        linksContainer.classList.add('hidden');
+      }
     }
 
     function setLayoutStyle(style) {
@@ -759,285 +952,80 @@
       renderCanvas();
     }
 
-    // Main Canvas Render Loop
-    function renderCanvas() {
-      const solidGroup = document.getElementById('solid-branches-group');
-      const leftJoinGroup = document.getElementById('left-joins-group');
-      const overheadGroup = document.getElementById('overhead-joins-group');
-      const nodesGroup = document.getElementById('nodes-group');
-      const corridorsGroup = document.getElementById('corridors-group');
-
-      solidGroup.innerHTML = '';
-      leftJoinGroup.innerHTML = '';
-      overheadGroup.innerHTML = '';
-      nodesGroup.innerHTML = '';
-      corridorsGroup.innerHTML = '';
-
-      let activeNodes, activeBranches, activeDashedJoins;
-
-      if (layoutStyle === 'perimeter') {
-        activeNodes = perimeterCombinedNodes;
-        activeBranches = perimeterSolidBranches;
-        activeDashedJoins = perimeterCombinedJoins;
-      } else {
-        activeNodes = (groupingMode === 'combined') ? combinedNodes : granularNodes;
-        activeBranches = (groupingMode === 'combined') ? combinedSolidBranches : granularSolidBranches;
-        activeDashedJoins = (groupingMode === 'combined') ? combinedDashedJoins : granularDashedJoins;
-      }
-
-      const activeSteps = combinedWizardSteps;
-
-      // 0. Render Lane Track Guides (Visual proof of non-crossing channels)
-      if (lineStyle === 'orthogonal') {
-        if (layoutStyle === 'perimeter') {
-          // Subtle border tracks on West, North, and East
-          const borderTracks = [
-            { x1: 160, y1: 220, x2: 160, y2: 900 },
-            { x1: 110, y1: 420, x2: 110, y2: 1000 },
-            { x1: 60,  y1: 560, x2: 60,  y2: 1100 },
-            { x1: 350, y1: 130, x2: 1850, y2: 130 },
-            { x1: 350, y1: 90,  x2: 1850, y2: 90 },
-            { x1: 350, y1: 50,  x2: 1850, y2: 50 },
-            { x1: 2040, y1: 220, x2: 2040, y2: 880 },
-            { x1: 2085, y1: 310, x2: 2085, y2: 1000 },
-            { x1: 2130, y1: 310, x2: 2130, y2: 1110 },
-          ];
-          borderTracks.forEach(tr => {
-            const lineEl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            lineEl.setAttribute('x1', tr.x1);
-            lineEl.setAttribute('y1', tr.y1);
-            lineEl.setAttribute('x2', tr.x2);
-            lineEl.setAttribute('y2', tr.y2);
-            lineEl.setAttribute('stroke', '#334155');
-            lineEl.setAttribute('stroke-width', '1');
-            lineEl.setAttribute('stroke-dasharray', '3 3');
-            corridorsGroup.appendChild(lineEl);
-          });
-        } else {
-          const laneTracks = [
-            { x: 60 }, { x: 100 }, { x: 140 }
-          ];
-          laneTracks.forEach(track => {
-            const lineEl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            lineEl.setAttribute('x1', track.x);
-            lineEl.setAttribute('y1', 120);
-            lineEl.setAttribute('x2', track.x);
-            lineEl.setAttribute('y2', 1160);
-            lineEl.setAttribute('stroke', '#334155');
-            lineEl.setAttribute('stroke-width', '1');
-            lineEl.setAttribute('stroke-dasharray', '3 3');
-            corridorsGroup.appendChild(lineEl);
-          });
-        }
-      }
-
-      // 1. Render Solid Branches
-      activeBranches.forEach(branch => {
-        const src = activeNodes[branch.from];
-        const dst = activeNodes[branch.to];
-        if (!src || !dst) return;
-
-        const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        const x1 = src.x < dst.x ? src.x + src.w / 2 : src.x - src.w / 2;
-        const x2 = src.x < dst.x ? dst.x - dst.w / 2 : dst.x + dst.w / 2;
-        const dx = (x2 - x1) * 0.4;
-
-        pathEl.setAttribute('d', `M ${x1} ${src.y} C ${x1 + dx} ${src.y}, ${x2 - dx} ${dst.y}, ${x2} ${dst.y}`);
-        pathEl.setAttribute('stroke', branch.from === 'root' ? '#94a3b8' : '#334155');
-        pathEl.setAttribute('stroke-width', branch.from === 'root' ? '2.5' : '1.75');
-        pathEl.setAttribute('fill', 'none');
-        pathEl.setAttribute('stroke-linecap', 'round');
-        solidGroup.appendChild(pathEl);
-      });
-
-      // 2. Render Dashed Relational Joins
-      activeDashedJoins.forEach(join => {
-        if (layerFilter !== 'all' && join.type !== layerFilter) {
-          return;
-        }
-
-        const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        pathEl.setAttribute('d', calculateSmartPath(join, activeNodes));
-        pathEl.setAttribute('stroke', joinColors[join.type]);
-        pathEl.setAttribute('stroke-width', '2.25');
-        pathEl.setAttribute('stroke-dasharray', '5 4');
-        pathEl.setAttribute('fill', 'none');
-        pathEl.setAttribute('class', `join-line join-${join.from} join-${join.to}`);
-        pathEl.id = `line-${join.id}`;
-
-        let shouldShow = true;
-        let isHighlighted = false;
-
-        if (isWalkthrough) {
-          const stepObj = activeSteps[wizardStep - 1];
-          if (stepObj && stepObj.node && (join.from === stepObj.node || join.to === stepObj.node)) {
-            isHighlighted = true;
-          } else {
-            shouldShow = false;
-          }
-        } else {
-          const activeTarget = selectedNodeId || hoveredNodeId;
-          if (activeTarget) {
-            if (join.from === activeTarget || join.to === activeTarget) {
-              isHighlighted = true;
-              pathEl.setAttribute('opacity', '1');
-            } else {
-              pathEl.setAttribute('opacity', '0.04');
-            }
-          } else {
-            pathEl.setAttribute('opacity', '0.75');
-          }
-        }
-
-        if (isHighlighted) {
-          pathEl.classList.add('highlighted');
-        }
-
-        if (shouldShow) {
-          leftJoinGroup.appendChild(pathEl);
-        }
-      });
-
-      // 3. Render Node Boxes
-      Object.values(activeNodes).forEach(node => {
-        const style = categoryStyles[node.category] || categoryStyles.branch;
-        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        g.setAttribute('class', 'map-node');
-        g.setAttribute('id', `node-${node.id}`);
-        g.setAttribute('transform', `translate(${node.x}, ${node.y})`);
-
-        if (isWalkthrough) {
-          const stepObj = activeSteps[wizardStep - 1];
-          let isActive = false;
-          if (stepObj && stepObj.node === node.id) isActive = true;
-          if (stepObj && stepObj.branch === 'all_branches' && (node.category === 'root' || node.category === 'branch')) isActive = true;
-          if (stepObj && stepObj.branch === node.category) isActive = true;
-
-          const relevantJoins = activeDashedJoins.filter(j => stepObj && stepObj.node && (j.from === stepObj.node || j.to === stepObj.node));
-          relevantJoins.forEach(j => {
-            if (j.from === node.id || j.to === node.id) isActive = true;
-          });
-
-          if (!isActive && stepObj && stepObj.node) {
-            g.classList.add('dimmed');
-          } else if (isActive) {
-            g.classList.add('active-walkthrough');
-          }
-        }
-
-        // Box Rectangle
-        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rect.setAttribute('x', -node.w / 2);
-        rect.setAttribute('y', -node.h / 2);
-        rect.setAttribute('width', node.w);
-        rect.setAttribute('height', node.h);
-        rect.setAttribute('rx', node.category === 'root' ? 14 : 10);
-        rect.setAttribute('fill', style.fill);
-        rect.setAttribute('stroke', style.stroke);
-        rect.setAttribute('stroke-width', style.strokeW);
-        rect.setAttribute('filter', 'url(#nodeShadow)');
-        g.appendChild(rect);
-
-        // Connection Port Dot
-        if (node.category === 'al' || node.category === 'kq' || node.category === 'ft') {
-          const port = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          const portX = (layoutStyle === 'perimeter' && node.category === 'kq') ? node.w / 2 : -node.w / 2;
-          port.setAttribute('cx', portX);
-          port.setAttribute('cy', 0);
-          port.setAttribute('r', 3.5);
-          port.setAttribute('fill', style.stroke);
-          g.appendChild(port);
-        }
-
-        // Text rendering
-        if (node.subtext) {
-          const textMain = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          textMain.setAttribute('text-anchor', 'middle');
-          textMain.setAttribute('x', 0);
-          textMain.setAttribute('y', -node.h * 0.18);
-          textMain.setAttribute('fill', style.text);
-          textMain.setAttribute('font-size', '12');
-          textMain.setAttribute('font-weight', '700');
-          textMain.textContent = node.label;
-
-          const textSub = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          textSub.setAttribute('text-anchor', 'middle');
-          textSub.setAttribute('x', 0);
-          textSub.setAttribute('y', node.h * 0.24);
-          textSub.setAttribute('fill', '#94a3b8');
-          textSub.setAttribute('font-size', '9.5');
-          textSub.setAttribute('font-weight', '500');
-          textSub.textContent = node.subtext;
-
-          g.appendChild(textMain);
-          g.appendChild(textSub);
-        } else {
-          const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          text.setAttribute('text-anchor', 'middle');
-          text.setAttribute('dominant-baseline', 'central');
-          text.setAttribute('fill', style.text);
-          text.setAttribute('font-size', node.category === 'root' ? '14' : (node.category === 'branch' ? '12.5' : '11.5'));
-          text.setAttribute('font-weight', node.category === 'root' || node.category === 'branch' ? '700' : '600');
-          text.textContent = node.label;
-          g.appendChild(text);
-        }
-
-        // Event Listeners
-        g.addEventListener('mouseenter', () => handleNodeHover(node.id));
-        g.addEventListener('mouseleave', () => handleNodeLeave());
-        g.addEventListener('click', (e) => {
-          e.stopPropagation();
-          handleNodeClick(node.id);
-        });
-
-        nodesGroup.appendChild(g);
-      });
+    function setGroupingMode(mode) {
+      groupingMode = mode;
+      document.getElementById('mode-combined').className = (mode === 'combined')
+        ? 'px-2.5 py-1.5 rounded-lg font-medium transition-all bg-emerald-600 text-white shadow-sm flex items-center gap-1.5'
+        : 'px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all flex items-center gap-1.5';
+      document.getElementById('mode-granular').className = (mode === 'granular')
+        ? 'px-2.5 py-1.5 rounded-lg font-medium transition-all bg-emerald-600 text-white shadow-sm flex items-center gap-1.5'
+        : 'px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all flex items-center gap-1.5';
+      renderCanvas();
     }
 
-    function inspectNode(nodeId) {
-      let activeNodes, activeDashed;
-      if (layoutStyle === 'perimeter') {
-        activeNodes = perimeterCombinedNodes;
-        activeDashed = perimeterCombinedJoins;
+    function setLayerFilter(filter) {
+      layerFilter = filter;
+      ['all', 'algo-kq', 'algo-fam', 'metric-kq'].forEach(f => {
+        const btn = document.getElementById(`flt-${f}`);
+        if (!btn) return;
+        if (f === filter) {
+          btn.className = 'px-2 py-1 rounded-md text-[11px] font-medium bg-slate-800 text-white';
+        } else {
+          btn.className = 'px-2 py-1 rounded-md text-[11px] text-slate-400 hover:bg-slate-900';
+        }
+      });
+      renderCanvas();
+    }
+
+    function setLineStyle(style) {
+      lineStyle = style;
+      document.getElementById('style-ortho').className = (style === 'orthogonal')
+        ? 'px-2.5 py-1 rounded-md text-[11px] font-medium bg-sky-600 text-white flex items-center gap-1'
+        : 'px-2.5 py-1 rounded-md text-[11px] text-slate-300 hover:bg-slate-900 flex items-center gap-1';
+      document.getElementById('style-bezier').className = (style === 'bezier')
+        ? 'px-2.5 py-1 rounded-md text-[11px] font-medium bg-sky-600 text-white flex items-center gap-1'
+        : 'px-2.5 py-1 rounded-md text-[11px] text-slate-300 hover:bg-slate-900 flex items-center gap-1';
+      renderCanvas();
+    }
+
+    function toggleWalkthrough() {
+      isWalkthrough = !isWalkthrough;
+      const bar = document.getElementById('walkthrough-bar');
+      const btn = document.getElementById('mode-wizard');
+      if (isWalkthrough) {
+        bar.classList.remove('hidden');
+        btn.classList.add('bg-amber-600', 'text-white');
+        btn.classList.remove('bg-slate-950', 'text-amber-300');
+        updateWizardUI();
       } else {
-        activeNodes = (groupingMode === 'combined') ? combinedNodes : granularNodes;
-        activeDashed = (groupingMode === 'combined') ? combinedDashedJoins : granularDashedJoins;
+        bar.classList.add('hidden');
+        btn.classList.remove('bg-amber-600', 'text-white');
+        btn.classList.add('bg-slate-950', 'text-amber-300');
       }
+      renderCanvas();
+    }
 
-      const node = activeNodes[nodeId];
-      if (!node) return;
+    function updateWizardUI() {
+      const stepObj = wizardSteps[wizardStep - 1];
+      if (!stepObj) return;
+      document.getElementById('wizard-step-badge').textContent = `Step ${wizardStep} of ${wizardSteps.length}`;
+      document.getElementById('wizard-step-title').textContent = stepObj.title;
+      document.getElementById('wizard-step-action').textContent = stepObj.action;
+    }
 
-      const titleEl = document.getElementById('inspector-title');
-      const descEl = document.getElementById('inspector-desc');
-      const linksContainer = document.getElementById('inspector-links');
-
-      titleEl.textContent = node.label;
-      let desc = node.desc || node.sub || 'Mind map component.';
-      if (node.subtext) {
-        desc += ` (${node.subtext})`;
+    function prevWizardStep() {
+      if (wizardStep > 1) {
+        wizardStep--;
+        updateWizardUI();
+        renderCanvas();
       }
-      descEl.textContent = desc;
+    }
 
-      const relJoins = activeDashed.filter(j => j.from === nodeId || j.to === nodeId);
-      if (relJoins.length > 0) {
-        linksContainer.classList.remove('hidden');
-        linksContainer.innerHTML = '<span class="font-semibold text-slate-300">Pencil Connections to Draw:</span>';
-        relJoins.forEach(j => {
-          const targetId = j.from === nodeId ? j.to : j.from;
-          const targetNode = activeNodes[targetId];
-          if (!targetNode) return;
-
-          const badgeClass = j.type === 'algo-fam' ? 'text-amber-400 border-amber-800 bg-amber-950/40' :
-                             (j.type === 'algo-kq' ? 'text-sky-400 border-sky-800 bg-sky-950/40' : 'text-emerald-400 border-emerald-800 bg-emerald-950/40');
-          const typeLabel = j.type === 'algo-fam' ? 'Family of Technique' : (j.type === 'algo-kq' ? 'Kind of Question' : 'Evaluates Question');
-
-          const item = document.createElement('div');
-          item.className = `p-1.5 rounded border ${badgeClass} flex items-center justify-between text-[11px]`;
-          item.innerHTML = `<span><strong>${targetNode.label}</strong></span> <span class="text-[10px] opacity-75">${typeLabel}</span>`;
-          linksContainer.appendChild(item);
-        });
-      } else {
-        linksContainer.classList.add('hidden');
+    function nextWizardStep() {
+      if (wizardStep < wizardSteps.length) {
+        wizardStep++;
+        updateWizardUI();
+        renderCanvas();
       }
     }
 
@@ -1052,10 +1040,10 @@
     function updateChecklist() {
       const checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
       const total = document.querySelectorAll('input[type="checkbox"]').length;
-      document.getElementById('checklist-counter').textContent = `${checked}/${total} checked`;
+      const el = document.getElementById('checklist-counter');
+      if (el) el.textContent = `${checked}/${total} checked`;
     }
 
-    // Pan & Zoom controls
     let viewBox = { x: 0, y: 0, w: 2200, h: 1350 };
     let isPanning = false;
     let startPoint = { x: 0, y: 0 };
@@ -1073,13 +1061,14 @@
     svg.addEventListener('wheel', (e) => {
       e.preventDefault();
       const zoomFactor = e.deltaY < 0 ? 0.9 : 1.1;
-      const mouseX = e.offsetX / svg.clientWidth;
-      const mouseY = e.offsetY / svg.clientHeight;
+      const rect = svg.getBoundingClientRect();
+      const mouseX = (e.clientX - rect.left) / rect.width;
+      const mouseY = (e.clientY - rect.top) / rect.height;
 
       const newW = viewBox.w * zoomFactor;
       const newH = viewBox.h * zoomFactor;
 
-      if (newW > 700 && newW < 4000) {
+      if (newW > 600 && newW < 4500) {
         viewBox.x += (viewBox.w - newW) * mouseX;
         viewBox.y += (viewBox.h - newH) * mouseY;
         viewBox.w = newW;
@@ -1096,8 +1085,9 @@
 
     window.addEventListener('mousemove', (e) => {
       if (!isPanning) return;
-      const dx = (e.clientX - startPoint.x) * (viewBox.w / svg.clientWidth);
-      const dy = (e.clientY - startPoint.y) * (viewBox.h / svg.clientHeight);
+      const rect = svg.getBoundingClientRect();
+      const dx = (e.clientX - startPoint.x) * (viewBox.w / rect.width);
+      const dy = (e.clientY - startPoint.y) * (viewBox.h / rect.height);
 
       viewBox.x -= dx;
       viewBox.y -= dy;
@@ -1111,6 +1101,7 @@
 
     function drawGrid() {
       const gridGroup = document.getElementById('grid-group');
+      if (!gridGroup) return;
       let lines = '';
       for (let x = 0; x <= 2200; x += 100) {
         lines += `<line x1="${x}" y1="0" x2="${x}" y2="1350" stroke="#94a3b8" stroke-width="1" />`;
@@ -1121,11 +1112,18 @@
       gridGroup.innerHTML = lines;
     }
 
+    // Launch immediately
     window.addEventListener('DOMContentLoaded', () => {
       drawGrid();
       renderCanvas();
       updateChecklist();
     });
+    // Fallback if DOMContentLoaded already fired
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      drawGrid();
+      renderCanvas();
+      updateChecklist();
+    }
   </script>
 </body>
 </html>
