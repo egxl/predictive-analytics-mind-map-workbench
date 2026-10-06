@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Predictive Analytics Mind Map - Hand-Drawing Reference</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      user-select: none;
+    }
+    /* SVG interactive line animations */
+    .join-line {
+      transition: stroke 0.2s ease, stroke-width 0.2s ease, opacity 0.25s ease;
+    }
+    .join-line.highlighted {
+      stroke-width: 3.5px !important;
+      opacity: 1 !important;
+      filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.25));
+    }
+    .join-line.dimmed {
+      opacity: 0.08 !important;
+    }
+    .map-node {
+      transition: transform 0.15s ease, filter 0.15s ease, opacity 0.2s ease;
+      cursor: pointer;
+    }
+    .map-node:hover {
+      filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.15));
+    }
+    .map-node.dimmed {
+      opacity: 0.2;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    @keyframes pulseDash {
+      to {
+        stroke-dashoffset: -30;
+      }
+    }
+    .animated-dash {
+      animation: pulseDash 1.5s linear infinite;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 h-screen w-screen overflow-hidden flex flex-col">
+
+  <header class="bg-slate-950 border-b border-slate-800 px-5 py-3 flex flex-wrap items-center justify-between gap-4 z-20 shadow-md">
+    <div class="flex items-center space-x-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-sky-500/20">
+        P
+      </div>
+      <div>
+        <h1 class="text-base font-bold text-slate-100 flex items-center gap-2">
+          Predictive Analytics Mind Map
+          <span class="text-xs px-2 py-0.5 rounded-full bg-sky-950 text-sky-400 border border-sky-800 font-medium">Session 4 Companion</span>
+        </h1>
+        <p class="text-xs text-slate-400">Hand-drawing blueprint • Match your single sheet of paper</p>
+      </div>
+    </div>
+
+    <!-- Step-by-Step Drawing Navigator -->
+    <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
+      <span class="text-slate-400 px-2 font-medium hidden sm:inline">Drawing Steps:</span>
+      <button onclick="setDrawingStep(0)" id="stepBtn0" class="step-btn px-3 py-1.5 rounded-lg font-medium transition-all bg-sky-600 text-white shadow-sm">
+        All View
+      </button>
+      <button onclick="setDrawingStep(1)" id="stepBtn1" class="step-btn px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-all">
+        1. 4 Branches
+      </button>
+      <button onclick="setDrawingStep(2)" id="stepBtn2" class="step-btn px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-all">
+        2. Sub-Nodes
+      </button>
+      <button onclick="setDrawingStep(3)" id="stepBtn3" class="step-btn px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-all">
+        3. Algo → Family
+      </button>
+      <button onclick="setDrawingStep(4)" id="stepBtn4" class="step-btn px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-all">
+        4. Algo → Question
+      </button>
+      <button onclick="setDrawingStep(5)" id="stepBtn5" class="step-btn px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-all">
+        5. Metric → Question
+      </button>
+    </div>
+
+    <!-- View & Display Controls -->
+    <div class="flex items-center space-x-2 text-xs">
+      <div class="flex bg-slate-900 rounded-lg p-1 border border-slate-800">
+        <button onclick="toggleFilter('all')" id="flt-all" class="flt-btn px-2.5 py-1 rounded bg-slate-700 text-white font-medium">All Joins</button>
+        <button onclick="toggleFilter('algo-fam')" id="flt-algo-fam" class="flt-btn px-2 py-1 rounded text-slate-400 hover:text-white">Algo→Fam</button>
+        <button onclick="toggleFilter('algo-kq')" id="flt-algo-kq" class="flt-btn px-2 py-1 rounded text-slate-400 hover:text-white">Algo→Question</button>
+        <button onclick="toggleFilter('metric-kq')" id="flt-metric-kq" class="flt-btn px-2 py-1 rounded text-slate-400 hover:text-white">Metric→Question</button>
+      </div>
+
+      <button onclick="resetZoom()" class="p-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-lg text-slate-300 hover:text-white title" title="Reset Zoom">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+      </button>
+      <button onclick="toggleSidebar()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg font-medium flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+        Drawing Guide
+      </button>
+    </div>
+  </header>
+
+  <div class="relative flex-1 flex overflow-hidden">
+    <!-- Main Interactive Map Canvas Area -->
+    <main id="canvas-container" class="relative flex-1 h-full bg-slate-950 overflow-hidden cursor-grab active:cursor-grabbing">
+      
+      <!-- Canvas Legend Overlay -->
+      <div class="absolute top-4 left-4 z-10 bg-slate-900/90 backdrop-blur border border-slate-800 rounded-xl p-3 shadow-xl max-w-xs pointer-events-auto">
+        <div class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Assignment Legend</div>
+        <div class="space-y-1.5 text-xs">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-0.5 bg-slate-400"></div>
+            <span class="text-slate-300 font-medium">Solid Line: Mind map hierarchy branch</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-0.5 border-t-2 border-dashed border-amber-400"></div>
+            <span class="text-amber-300">Dashed Orange: Algorithm → Family join</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-0.5 border-t-2 border-dashed border-sky-400"></div>
+            <span class="text-sky-300">Dashed Blue: Algorithm → Question join</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-0.5 border-t-2 border-dashed border-emerald-400"></div>
+            <span class="text-emerald-300">Dashed Green: Metric → Question join</span>
+          </div>
+        </div>
+        <div class="mt-2.5 pt-2 border-t border-slate-800 text-[11px] text-slate-400">
+          <span class="text-sky-400 font-semibold">Tip:</span> Hover on any algorithm or metric to isolate its connections.
+        </div>
+      </div>
+
+      <!-- Quick Action Toast Banner -->
+      <div id="step-instruction-box" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 bg-slate-900/95 border border-sky-600/50 shadow-2xl px-5 py-2.5 rounded-full flex items-center gap-3 backdrop-blur pointer-events-auto transition-all duration-300">
+        <div class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-ping"></div>
+        <span id="step-instruction-text" class="text-xs font-medium text-slate-200">
+          Complete Overview Mode: Showing all 4 primary branches, algorithms, metrics, and relationships.
+        </span>
+      </div>
+
+      <!-- SVG Drawing Surface -->
+      <svg id="mindmap-svg" class="w-full h-full" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="centerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#38bdf8" />
+            <stop offset="100%" stop-color="#4f46e5" />
+          </linearGradient>
+          <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+        </defs>
+
+        <!-- Dynamic Content Groups -->
+        <g id="grid-group" opacity="0.12"></g>
+        <g id="solid-branches-group"></g>
+        <g id="dashed-joins-group"></g>
+        <g id="nodes-group"></g>
+      </svg>
+    </main>
+
+    <!-- Sliding Assistant & Hand-drawing Checklist Sidebar -->
+    <aside id="guide-sidebar" class="w-96 bg-slate-900 border-l border-slate-800 flex flex-col z-20 shadow-2xl transition-all duration-300 ease-in-out">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+          <h2 class="font-bold text-sm text-slate-100">Hand-Drawing Assistant</h2>
+        </div>
+        <button onclick="toggleSidebar()" class="text-slate-400 hover:text-slate-200 text-lg">&times;</button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-6 text-xs text-slate-300">
+        
+        <!-- Assignment Objective Card -->
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
+          <div class="font-semibold text-slate-200 text-sm flex items-center justify-between">
+            <span>Assignment Requirements</span>
+            <span class="text-[10px] bg-sky-950 text-sky-400 border border-sky-800 px-2 py-0.5 rounded">Individual</span>
+          </div>
+          <p class="text-slate-400 leading-relaxed">
+            Draw a mind map of prediction on <strong class="text-white">one sheet of paper by hand</strong>. The four branches must be present. Draw lines from each algorithm to its family and compatible question, and from each metric to its question. Take a photo to upload.
+          </p>
+        </div>
+
+        <!-- Selected Node Inspector Details -->
+        <div id="inspector-card" class="bg-slate-950/80 p-3.5 rounded-xl border border-sky-900/50 space-y-2">
+          <div class="text-[11px] font-semibold text-sky-400 uppercase tracking-wide">Node Inspector</div>
+          <div id="inspector-title" class="font-bold text-white text-sm">Click or hover any node</div>
+          <div id="inspector-desc" class="text-slate-400 text-xs leading-relaxed">
+            Select an algorithm or metric on the map to review its theoretical background from the lecture slides and see what joins to draw.
+          </div>
+          <div id="inspector-links" class="pt-2 border-t border-slate-800/80 space-y-1 text-[11px] hidden"></div>
+        </div>
+
+        <!-- Hand-Drawing Paper Layout Strategy -->
+        <div class="space-y-3">
+          <h3 class="font-bold text-slate-200 uppercase tracking-wider text-[11px]">Paper Layout Recommendations</h3>
+          <div class="space-y-2 text-slate-400">
+            <div class="flex items-start gap-2 bg-slate-950/50 p-2.5 rounded-lg border border-slate-800">
+              <span class="text-sky-400 font-bold">1.</span>
+              <span><strong>Landscape Orientation:</strong> Turn your paper horizontally so you have plenty of lateral space for algorithms on the left and metrics on the right.</span>
+            </div>
+            <div class="flex items-start gap-2 bg-slate-950/50 p-2.5 rounded-lg border border-slate-800">
+              <span class="text-sky-400 font-bold">2.</span>
+              <span><strong>Central Box:</strong> Write <span class="text-sky-300 font-mono font-semibold">PREDICTION</span> dead center. Leave sufficient padding around it.</span>
+            </div>
+            <div class="flex items-start gap-2 bg-slate-950/50 p-2.5 rounded-lg border border-slate-800">
+              <span class="text-sky-400 font-bold">3.</span>
+              <span><strong>Colors or Line Patterns:</strong> Use a normal pen for solid tree branches and a colored pen (or dashed lines) for relational joins to prevent visual tangling.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mandatory Elements Checklist -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-slate-200 uppercase tracking-wider text-[11px]">Submission Checklist</h3>
+            <span id="checklist-counter" class="text-[11px] font-mono text-emerald-400">0/15 checked</span>
+          </div>
+          <div class="space-y-1.5 text-xs text-slate-300 bg-slate-950/50 p-3 rounded-xl border border-slate-800">
+            <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+              <input type="checkbox" onchange="updateChecklist()" class="rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-0">
+              <span>Central Node labeled <strong>PREDICTION</strong></span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+              <input type="checkbox" onchange="updateChecklist()" class="rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-0">
+              <span>Branch: <strong>Kind of question</strong></span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:text-white pl-4 text-slate-400">
+              <input type="checkbox" onchange="updateChecklist()" class="rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-0">
+              <span>Classification, Regression, Time Series</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+              <input type="checkbox" onchange="updateChecklist()" class="rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-0">
+              <span>Branch: <strong>Family of technique</strong></span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:text-white pl-4 text-slate-400">
+              <input type="checkbox" onchange="updateChecklist()" class="rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-0">
+              <span>Statistics, Machine learning, Deep learning</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+              <input type="checkbox" onchange="updateChecklist()" class="rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-0">
+              <span>Branch: <strong>Algorithms</strong> (All methods listed)</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+              <input type="checkbox" onchange="updateChecklist()" class="rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-0">
+              <span>Branch: <strong>Metrics</strong> (Classification & Regression)</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+              <input type="checkbox" onchange="updateChecklist()" class="rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-0">
+              <span>Algorithm → Family joins drawn</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+              <input type="checkbox" onchange="updateChecklist()" class="rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-0">
+              <span>Decision Tree connected to 2 questions</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+              <input type="checkbox" onchange="updateChecklist()" class="rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-0">
+              <span>All Algorithms linked to questions</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+              <input type="checkbox" onchange="updateChecklist()" class="rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-0">
+              <span>Classification Metrics linked</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+              <input type="checkbox" onchange="updateChecklist()" class="rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-0">
+              <span>Regression & Forecasting Metrics linked</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+              <input type="checkbox" onchange="updateChecklist()" class="rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-0">
+              <span>Handwritten by hand on 1 single sheet</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+              <input type="checkbox" onchange="updateChecklist()" class="rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-0">
+              <span>Legible lighting & clear high-res photo</span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    // Node definitions according to Week 4 Slide Deck & Assignment Prompt
+    const nodes = {
+      // Root
+      root: { id: 'root', label: 'PREDICTION', category: 'root', x: 800, y: 500, w: 160, h: 48, sub: 'Central Concept' },
+
+      // Main Branch Nodes
+      b_kq: { id: 'b_kq', label: 'Kind of question', category: 'branch', x: 420, y: 240, w: 170, h: 40, sub: 'Three predictive goals' },
+      b_ft: { id: 'b_ft', label: 'Family of technique', category: 'branch', x: 430, y: 810, w: 180, h: 40, sub: 'Three modeling traditions' },
+      b_al: { id: 'b_al', label: 'Algorithms', category: 'branch', x: 440, y: 530, w: 140, h: 40, sub: 'Named methods' },
+      b_me: { id: 'b_me', label: 'Metrics', category: 'branch', x: 1160, y: 490, w: 130, h: 40, sub: 'Evaluation formulas' },
+
+      // Kind of question sub-nodes
+      kq_cls: { id: 'kq_cls', label: 'Classification', category: 'kq', x: 160, y: 140, w: 150, h: 36, desc: 'Which category or group does a row belong to? (e.g. Churn yes/no)' },
+      kq_reg: { id: 'kq_reg', label: 'Regression', category: 'kq', x: 160, y: 230, w: 150, h: 36, desc: 'What continuous number goes with this row? (e.g. House price, salary)' },
+      kq_tsf: { id: 'kq_tsf', label: 'Time series forecasting', category: 'kq', x: 160, y: 320, w: 180, h: 36, desc: 'What comes next in chronological sequence? (e.g. Sales next March)' },
+
+      // Family of technique sub-nodes
+      ft_sta: { id: 'ft_sta', label: 'Statistics', category: 'ft', x: 150, y: 750, w: 130, h: 34, desc: 'Probabilistic foundation, parameter estimation, interpretable weights.' },
+      ft_ml:  { id: 'ft_ml',  label: 'Machine learning', category: 'ft', x: 150, y: 820, w: 150, h: 34, desc: 'Algorithmic optimization, decision boundaries, rule splitting, ensembles.' },
+      ft_dl:  { id: 'ft_dl',  label: 'Deep learning', category: 'ft', x: 150, y: 890, w: 140, h: 34, desc: 'Multi-layer neural nets learning hierarchical latent representations.' },
+
+      // Algorithm sub-nodes
+      al_lin: { id: 'al_lin', label: 'Linear Regression', category: 'al', x: 180, y: 420, w: 160, h: 32, family: 'Statistics', questions: ['Regression'], desc: 'Predicts continuous targets via weighted combination of features (y = b0 + b1*x1...).' },
+      al_rg:  { id: 'al_rg',  label: 'Ridge / Lasso / Elastic Net', category: 'al', x: 180, y: 460, w: 200, h: 32, family: 'Statistics', questions: ['Regression'], desc: 'Regularized linear models with L2 / L1 penalties to prevent overfitting and select features.' },
+      al_log: { id: 'al_log', label: 'Logistic Regression', category: 'al', x: 180, y: 500, w: 160, h: 32, family: 'Statistics', questions: ['Classification'], desc: 'Applies sigmoid function to linear equation; outputs class probability and readable weights.' },
+      al_nb:  { id: 'al_nb',  label: 'Naive Bayes', category: 'al', x: 180, y: 540, w: 130, h: 32, family: 'Statistics', questions: ['Classification'], desc: 'Fast probabilistic classifier using Bayes theorem; assumes feature independence.' },
+      al_ari: { id: 'al_ari', label: 'ARIMA', category: 'al', x: 180, y: 580, w: 110, h: 32, family: 'Statistics', questions: ['Time series forecasting'], desc: 'Autoregressive Integrated Moving Average; models temporal autocorrelation and trend.' },
+      
+      al_dt:  { id: 'al_dt',  label: 'Decision Tree', category: 'al', x: 180, y: 620, w: 140, h: 32, family: 'Machine learning', questions: ['Classification', 'Regression'], desc: 'Splits rows using sequential if/then rules. Highlighted in assignment example!' },
+      al_rf:  { id: 'al_rf',  label: 'Random Forest', category: 'al', x: 180, y: 660, w: 140, h: 32, family: 'Machine learning', questions: ['Classification', 'Regression'], desc: 'Ensemble of decorrelated decision trees; accurate, robust against variance.' },
+      al_gb:  { id: 'al_gb',  label: 'Gradient Boosting', category: 'al', x: 180, y: 700, w: 155, h: 32, family: 'Machine learning', questions: ['Classification', 'Regression'], desc: 'Sequentially trains trees to correct previous errors; highest accuracy on tabular data.' },
+      al_svm: { id: 'al_svm', label: 'Support Vector Machine', category: 'al', x: 440, y: 640, w: 185, h: 32, family: 'Machine learning', questions: ['Classification', 'Regression'], desc: 'Maximizes the margin between classes using kernel tricks.' },
+      al_knn: { id: 'al_knn', label: 'k-Nearest Neighbours', category: 'al', x: 440, y: 690, w: 175, h: 32, family: 'Machine learning', questions: ['Classification', 'Regression'], desc: 'Instance-based method looking at closest k samples in feature space.' },
+      al_nn:  { id: 'al_nn',  label: 'Neural Network', category: 'al', x: 440, y: 740, w: 145, h: 32, family: 'Deep learning', questions: ['Classification', 'Regression', 'Time series forecasting'], desc: 'Layers of interconnected nodes with non-linear activations; models complex patterns.' },
+
+      // Metrics sub-nodes
+      // Classification metrics
+      me_acc: { id: 'me_acc', label: 'Accuracy', category: 'me', x: 1420, y: 200, w: 110, h: 32, questions: ['Classification'], formula: '(TP + TN) / All', desc: 'Overall percentage of correct predictions.' },
+      me_prc: { id: 'me_prc', label: 'Precision', category: 'me', x: 1420, y: 245, w: 110, h: 32, questions: ['Classification'], formula: 'TP / (TP + FP)', desc: 'When the model predicts positive, how often is it right?' },
+      me_rec: { id: 'me_rec', label: 'Recall', category: 'me', x: 1420, y: 290, w: 100, h: 32, questions: ['Classification'], formula: 'TP / (TP + FN)', desc: 'Proportion of actual positives the model caught.' },
+      me_spf: { id: 'me_spf', label: 'Specificity', category: 'me', x: 1420, y: 335, w: 115, h: 32, questions: ['Classification'], formula: 'TN / (TN + FP)', desc: 'Proportion of actual negatives correctly left alone.' },
+      me_npv: { id: 'me_npv', label: 'NPV', category: 'me', x: 1420, y: 380, w: 90, h: 32, questions: ['Classification'], formula: 'TN / (TN + FN)', desc: 'When the model predicts negative, how often is it right?' },
+      me_f1:  { id: 'me_f1',  label: 'F1-Score', category: 'me', x: 1420, y: 425, w: 105, h: 32, questions: ['Classification'], formula: '2*P*R / (P + R)', desc: 'Harmonic mean balancing precision and recall.' },
+
+      // Continuous (Regression & Time Series) metrics
+      me_mae: { id: 'me_mae', label: 'MAE', category: 'me', x: 1420, y: 530, w: 90, h: 32, questions: ['Regression', 'Time series forecasting'], formula: 'avg(|actual - pred|)', desc: 'Mean Absolute Error; typical gap in original units.' },
+      me_mse: { id: 'me_mse', label: 'MSE', category: 'me', x: 1420, y: 575, w: 90, h: 32, questions: ['Regression', 'Time series forecasting'], formula: 'avg((actual - pred)^2)', desc: 'Mean Squared Error; heavily penalizes large errors.' },
+      me_rms: { id: 'me_rms', label: 'RMSE', category: 'me', x: 1420, y: 620, w: 100, h: 32, questions: ['Regression', 'Time series forecasting'], formula: 'sqrt(MSE)', desc: 'Root Mean Squared Error; squared penalties brought back to dollars/units.' },
+      me_map: { id: 'me_map', label: 'MAPE', category: 'me', x: 1420, y: 665, w: 100, h: 32, questions: ['Regression', 'Time series forecasting'], formula: 'avg(|gap| / actual)', desc: 'Mean Absolute Percentage Error; scale-independent.' },
+      me_r2:  { id: 'me_r2',  label: 'R² (R-Squared)', category: 'me', x: 1420, y: 710, w: 130, h: 32, questions: ['Regression'], formula: '1 - (SS_res / SS_tot)', desc: 'Proportion of variance explained by features compared to simple mean.' },
+    };
+
+    // Solid tree branches radiating from Root
+    const solidBranches = [
+      { from: 'root', to: 'b_kq' },
+      { from: 'root', to: 'b_ft' },
+      { from: 'root', to: 'b_al' },
+      { from: 'root', to: 'b_me' },
+
+      // Kind of Question children
+      { from: 'b_kq', to: 'kq_cls' },
+      { from: 'b_kq', to: 'kq_reg' },
+      { from: 'b_kq', to: 'kq_tsf' },
+
+      // Family children
+      { from: 'b_ft', to: 'ft_sta' },
+      { from: 'b_ft', to: 'ft_ml' },
+      { from: 'b_ft', to: 'ft_dl' },
+
+      // Algorithm children (organized under b_al branch)
+      { from: 'b_al', to: 'al_lin' },
+      { from: 'b_al', to: 'al_rg' },
+      { from: 'b_al', to: 'al_log' },
+      { from: 'b_al', to: 'al_nb' },
+      { from: 'b_al', to: 'al_ari' },
+      { from: 'b_al', to: 'al_dt' },
+      { from: 'b_al', to: 'al_rf' },
+      { from: 'b_al', to: 'al_gb' },
+      { from: 'b_al', to: 'al_svm' },
+      { from: 'b_al', to: 'al_knn' },
+      { from: 'b_al', to: 'al_nn' },
+
+      // Metrics children
+      { from: 'b_me', to: 'me_acc' },
+      { from: 'b_me', to: 'me_prc' },
+      { from: 'b_me', to: 'me_rec' },
+      { from: 'b_me', to: 'me_spf' },
+      { from: 'b_me', to: 'me_npv' },
+      { from: 'b_me', to: 'me_f1' },
+      { from: 'b_me', to: 'me_mae' },
+      { from: 'b_me', to: 'me_mse' },
+      { from: 'b_me', to: 'me_rms' },
+      { from: 'b_me', to: 'me_map' },
+      { from: 'b_me', to: 'me_r2' },
+    ];
+
+    // Dashed Joins required by assignment
+    const dashedJoins = [
+      // 1. Algorithms to Family of Technique (Orange)
+      { type: 'algo-fam', from: 'al_lin', to: 'ft_sta' },
+      { type: 'algo-fam', from: 'al_rg',  to: 'ft_sta' },
+      { type: 'algo-fam', from: 'al_log', to: 'ft_sta' },
+      { type: 'algo-fam', from: 'al_nb',  to: 'ft_sta' },
+      { type: 'algo-fam', from: 'al_ari', to: 'ft_sta' },
+
+      { type: 'algo-fam', from: 'al_dt',  to: 'ft_ml' },
+      { type: 'algo-fam', from: 'al_rf',  to: 'ft_ml' },
+      { type: 'algo-fam', from: 'al_gb',  to: 'ft_ml' },
+      { type: 'algo-fam', from: 'al_svm', to: 'ft_ml' },
+      { type: 'algo-fam', from: 'al_knn', to: 'ft_ml' },
+
+      { type: 'algo-fam', from: 'al_nn',  to: 'ft_dl' },
+
+      // 2. Algorithms to Kind of Question (Blue)
+      { type: 'algo-kq', from: 'al_lin', to: 'kq_reg' },
+      { type: 'algo-kq', from: 'al_rg',  to: 'kq_reg' },
+      { type: 'algo-kq', from: 'al_log', to: 'kq_cls' },
+      { type: 'algo-kq', from: 'al_nb',  to: 'kq_cls' },
+      { type: 'algo-kq', from: 'al_ari', to: 'kq_tsf' },
+
+      // Decision tree answers two questions! (Highlight from prompt)
+      { type: 'algo-kq', from: 'al_dt',  to: 'kq_cls' },
+      { type: 'algo-kq', from: 'al_dt',  to: 'kq_reg' },
+
+      { type: 'algo-kq', from: 'al_rf',  to: 'kq_cls' },
+      { type: 'algo-kq', from: 'al_rf',  to: 'kq_reg' },
+      { type: 'algo-kq', from: 'al_gb',  to: 'kq_cls' },
+      { type: 'algo-kq', from: 'al_gb',  to: 'kq_reg' },
+      { type: 'algo-kq', from: 'al_svm', to: 'kq_cls' },
+      { type: 'algo-kq', from: 'al_svm', to: 'kq_reg' },
+      { type: 'algo-kq', from: 'al_knn', to: 'kq_cls' },
+      { type: 'algo-kq', from: 'al_knn', to: 'kq_reg' },
+
+      { type: 'algo-kq', from: 'al_nn',  to: 'kq_cls' },
+      { type: 'algo-kq', from: 'al_nn',  to: 'kq_reg' },
+      { type: 'algo-kq', from: 'al_nn',  to: 'kq_tsf' },
+
+      // 3. Metrics to Kind of Question (Green)
+      { type: 'metric-kq', from: 'me_acc', to: 'kq_cls' },
+      { type: 'metric-kq', from: 'me_prc', to: 'kq_cls' },
+      { type: 'metric-kq', from: 'me_rec', to: 'kq_cls' },
+      { type: 'metric-kq', from: 'me_spf', to: 'kq_cls' },
+      { type: 'metric-kq', from: 'me_npv', to: 'kq_cls' },
+      { type: 'metric-kq', from: 'me_f1',  to: 'kq_cls' },
+
+      { type: 'metric-kq', from: 'me_mae', to: 'kq_reg' },
+      { type: 'metric-kq', from: 'me_mse', to: 'kq_reg' },
+      { type: 'metric-kq', from: 'me_rms', to: 'kq_reg' },
+      { type: 'metric-kq', from: 'me_map', to: 'kq_reg' },
+      { type: 'metric-kq', from: 'me_r2',  to: 'kq_reg' },
+
+      { type: 'metric-kq', from: 'me_mae', to: 'kq_tsf' },
+      { type: 'metric-kq', from: 'me_mse', to: 'kq_tsf' },
+      { type: 'metric-kq', from: 'me_rms', to: 'kq_tsf' },
+      { type: 'metric-kq', from: 'me_map', to: 'kq_tsf' },
+    ];
+  </script>
+
+  <script>
+    let activeStep = 0;
+    let activeFilter = 'all';
+    let hoveredNodeId = null;
+
+    // Palette & Styling Tokens
+    const categoryStyles = {
+      root: { fill: 'url(#centerGrad)', stroke: '#38bdf8', text: '#ffffff', strokeW: 2.5 },
+      branch: { fill: '#1e293b', stroke: '#94a3b8', text: '#f8fafc', strokeW: 2 },
+      kq: { fill: '#0c4a6e', stroke: '#38bdf8', text: '#e0f2fe', strokeW: 1.5 },
+      ft: { fill: '#451a03', stroke: '#f59e0b', text: '#fef3c7', strokeW: 1.5 },
+      al: { fill: '#064e3b', stroke: '#34d399', text: '#d1fae5', strokeW: 1.5 },
+      me: { fill: '#4c1d95', stroke: '#a78bfa', text: '#ede9fe', strokeW: 1.5 },
+    };
+
+    const joinColors = {
+      'algo-fam': '#f59e0b',  // Amber
+      'algo-kq': '#38bdf8',   // Light Sky Blue
+      'metric-kq': '#34d399', // Emerald
+    };
+
+    // Calculate smooth Bezier Curve between two boxes
+    function getBezierPath(src, dst, curvature = 0.5) {
+      let x1 = src.x;
+      let y1 = src.y;
+      let x2 = dst.x;
+      let y2 = dst.y;
+
+      // Adjust anchors to outer box edges for cleaner visual attachment
+      if (x1 < x2) {
+        x1 += src.w / 2;
+        x2 -= dst.w / 2;
+      } else {
+        x1 -= src.w / 2;
+        x2 += dst.w / 2;
+      }
+
+      const dx = (x2 - x1) * curvature;
+      return `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
+    }
+
+    function renderMap() {
+      const solidGroup = document.getElementById('solid-branches-group');
+      const dashedGroup = document.getElementById('dashed-joins-group');
+      const nodesGroup = document.getElementById('nodes-group');
+
+      solidGroup.innerHTML = '';
+      dashedGroup.innerHTML = '';
+      nodesGroup.innerHTML = '';
+
+      // Determine step visibility
+      const showSubNodes = activeStep >= 2 || activeStep === 0;
+      const showAlgoFam = (activeStep === 3 || activeStep === 0) && (activeFilter === 'all' || activeFilter === 'algo-fam');
+      const showAlgoKq  = (activeStep === 4 || activeStep === 0) && (activeFilter === 'all' || activeFilter === 'algo-kq');
+      const showMetricKq = (activeStep === 5 || activeStep === 0) && (activeFilter === 'all' || activeFilter === 'metric-kq');
+
+      // 1. Render Solid Tree Branches
+      solidBranches.forEach((branch, idx) => {
+        const fromNode = nodes[branch.from];
+        const toNode = nodes[branch.to];
+
+        // Filter out child branches if step is 1
+        if (activeStep === 1 && branch.from !== 'root') return;
+
+        const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        pathEl.setAttribute('d', getBezierPath(fromNode, toNode, 0.45));
+        pathEl.setAttribute('stroke', branch.from === 'root' ? '#94a3b8' : '#475569');
+        pathEl.setAttribute('stroke-width', branch.from === 'root' ? '2.5' : '1.5');
+        pathEl.setAttribute('fill', 'none');
+        pathEl.setAttribute('stroke-linecap', 'round');
+        pathEl.setAttribute('opacity', '0.7');
+        solidGroup.appendChild(pathEl);
+      });
+
+      // 2. Render Dashed Relational Joins
+      dashedJoins.forEach((join, idx) => {
+        let isVisible = false;
+        if (join.type === 'algo-fam' && showAlgoFam) isVisible = true;
+        if (join.type === 'algo-kq' && showAlgoKq) isVisible = true;
+        if (join.type === 'metric-kq' && showMetricKq) isVisible = true;
+
+        if (!isVisible) return;
+
+        const fromNode = nodes[join.from];
+        const toNode = nodes[join.to];
+
+        const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        
+        // Custom curved control for long across-the-map arcs
+        let curvature = 0.5;
+        if (join.type === 'metric-kq') curvature = 0.65; // Wide arch across top
+
+        pathEl.setAttribute('d', getBezierPath(fromNode, toNode, curvature));
+        pathEl.setAttribute('stroke', joinColors[join.type]);
+        pathEl.setAttribute('stroke-width', '1.75');
+        pathEl.setAttribute('stroke-dasharray', '5 4');
+        pathEl.setAttribute('fill', 'none');
+        pathEl.setAttribute('opacity', '0.5');
+        pathEl.setAttribute('class', `join-line join-${join.from} join-${join.to}`);
+        pathEl.dataset.from = join.from;
+        pathEl.dataset.to = join.to;
+        pathEl.dataset.type = join.type;
+
+        dashedGroup.appendChild(pathEl);
+      });
+
+      // 3. Render Nodes
+      Object.values(nodes).forEach(node => {
+        // Step-based visibility filter
+        if (activeStep === 1 && node.category !== 'root' && node.category !== 'branch') {
+          return;
+        }
+
+        const style = categoryStyles[node.category] || categoryStyles.branch;
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('class', 'map-node');
+        g.setAttribute('id', `node-${node.id}`);
+        g.setAttribute('transform', `translate(${node.x}, ${node.y})`);
+
+        // Node Container Rectangle
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', -node.w / 2);
+        rect.setAttribute('y', -node.h / 2);
+        rect.setAttribute('width', node.w);
+        rect.setAttribute('height', node.h);
+        rect.setAttribute('rx', node.category === 'root' ? 12 : 8);
+        rect.setAttribute('fill', style.fill);
+        rect.setAttribute('stroke', style.stroke);
+        rect.setAttribute('stroke-width', style.strokeW);
+
+        // Node Label
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('dominant-baseline', 'central');
+        text.setAttribute('fill', style.text);
+        text.setAttribute('font-size', node.category === 'root' ? '15' : (node.category === 'branch' ? '13' : '11.5'));
+        text.setAttribute('font-weight', node.category === 'root' || node.category === 'branch' ? '700' : '500');
+        text.textContent = node.label;
+
+        g.appendChild(rect);
+        g.appendChild(text);
+
+        // Interactive Handlers
+        g.addEventListener('mouseenter', () => highlightNode(node.id));
+        g.addEventListener('mouseleave', () => clearHighlights());
+        g.addEventListener('click', (e) => {
+          e.stopPropagation();
+          inspectNode(node.id);
+        });
+
+        nodesGroup.appendChild(g);
+      });
+    }
+
+    const stepInstructions = [
+      "All View: Complete blueprint showing all 4 branches, algorithms, metrics, and connecting joins.",
+      "Step 1: On your blank paper, draw PREDICTION at the center. Radiate the 4 primary solid branches outward.",
+      "Step 2: Add all sub-nodes under each branch (Questions, Techniques, Named Algorithms, and Metrics).",
+      "Step 3: Connect each Algorithm to its origin Family of Technique with dashed lines (e.g. ARIMA → Statistics).",
+      "Step 4: Connect each Algorithm to the Kind of Question it solves (Decision Tree links to both Classification & Regression!).",
+      "Step 5: Connect each Metric to its compatible Question (Accuracy → Classification, RMSE → Regression & Time Series)."
+    ];
+
+    function setDrawingStep(step) {
+      activeStep = step;
+      document.querySelectorAll('.step-btn').forEach((btn, idx) => {
+        if (idx === step) {
+          btn.className = 'step-btn px-3 py-1.5 rounded-lg font-medium transition-all bg-sky-600 text-white shadow-sm';
+        } else {
+          btn.className = 'step-btn px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-all';
+        }
+      });
+
+      document.getElementById('step-instruction-text').textContent = stepInstructions[step];
+      renderMap();
+    }
+
+    function toggleFilter(filterKey) {
+      activeFilter = filterKey;
+      document.querySelectorAll('.flt-btn').forEach(btn => {
+        btn.className = 'flt-btn px-2 py-1 rounded text-slate-400 hover:text-white';
+      });
+      const activeBtn = document.getElementById(`flt-${filterKey}`);
+      if (activeBtn) {
+        activeBtn.className = 'flt-btn px-2.5 py-1 rounded bg-slate-700 text-white font-medium';
+      }
+      renderMap();
+    }
+
+    function highlightNode(nodeId) {
+      hoveredNodeId = nodeId;
+      const allLines = document.querySelectorAll('.join-line');
+      const allNodes = document.querySelectorAll('.map-node');
+
+      let connectedNodeIds = new Set([nodeId]);
+      let hasConnections = false;
+
+      allLines.forEach(line => {
+        if (line.dataset.from === nodeId || line.dataset.to === nodeId) {
+          line.classList.add('highlighted');
+          line.classList.remove('dimmed');
+          connectedNodeIds.add(line.dataset.from);
+          connectedNodeIds.add(line.dataset.to);
+          hasConnections = true;
+        } else {
+          line.classList.add('dimmed');
+          line.classList.remove('highlighted');
+        }
+      });
+
+      if (hasConnections) {
+        allNodes.forEach(nodeEl => {
+          const id = nodeEl.id.replace('node-', '');
+          if (connectedNodeIds.has(id)) {
+            nodeEl.classList.remove('dimmed');
+          } else {
+            nodeEl.classList.add('dimmed');
+          }
+        });
+      }
+    }
+
+    function clearHighlights() {
+      hoveredNodeId = null;
+      document.querySelectorAll('.join-line').forEach(line => {
+        line.classList.remove('highlighted', 'dimmed');
+      });
+      document.querySelectorAll('.map-node').forEach(nodeEl => {
+        nodeEl.classList.remove('dimmed');
+      });
+    }
+
+    function inspectNode(nodeId) {
+      const node = nodes[nodeId];
+      if (!node) return;
+
+      const titleEl = document.getElementById('inspector-title');
+      const descEl = document.getElementById('inspector-desc');
+      const linksContainer = document.getElementById('inspector-links');
+
+      titleEl.textContent = node.label;
+      let desc = node.desc || (node.formula ? `Formula: ${node.formula}` : node.sub || 'Mind map node component.');
+      descEl.textContent = desc;
+
+      // Find connections
+      const relJoins = dashedJoins.filter(j => j.from === nodeId || j.to === nodeId);
+      if (relJoins.length > 0) {
+        linksContainer.classList.remove('hidden');
+        linksContainer.innerHTML = '<span class="font-semibold text-slate-300">Required Hand-Drawn Joins:</span>';
+        relJoins.forEach(j => {
+          const targetId = j.from === nodeId ? j.to : j.from;
+          const targetNode = nodes[targetId];
+          const badgeColor = j.type === 'algo-fam' ? 'text-amber-400 bg-amber-950/60 border-amber-800' :
+                             (j.type === 'algo-kq' ? 'text-sky-400 bg-sky-950/60 border-sky-800' : 'text-emerald-400 bg-emerald-950/60 border-emerald-800');
+          const typeLabel = j.type === 'algo-fam' ? 'Family' : (j.type === 'algo-kq' ? 'Answers Question' : 'Evaluates');
+
+          const div = document.createElement('div');
+          div.className = `p-1.5 rounded border ${badgeColor} flex items-center justify-between text-[11px]`;
+          div.innerHTML = `<span><strong>${targetNode.label}</strong></span> <span class="text-[10px] opacity-80">${typeLabel}</span>`;
+          linksContainer.appendChild(div);
+        });
+      } else {
+        linksContainer.classList.add('hidden');
+      }
+
+      // Automatically open sidebar if closed
+      const sidebar = document.getElementById('guide-sidebar');
+      if (sidebar.classList.contains('translate-x-full')) {
+        toggleSidebar();
+      }
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('guide-sidebar');
+      sidebar.classList.toggle('hidden');
+    }
+
+    function updateChecklist() {
+      const checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
+      const total = document.querySelectorAll('input[type="checkbox"]').length;
+      document.getElementById('checklist-counter').textContent = `${checked}/${total} checked`;
+    }
+
+    let viewBox = { x: 0, y: 0, w: 1600, h: 1000 };
+    let isPanning = false;
+    let startPoint = { x: 0, y: 0 };
+    const svg = document.getElementById('mindmap-svg');
+
+    function updateViewBox() {
+      svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+    }
+
+    function resetZoom() {
+      viewBox = { x: 0, y: 0, w: 1600, h: 1000 };
+      updateViewBox();
+    }
+
+    svg.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 0.9 : 1.1;
+      const mouseX = e.offsetX / svg.clientWidth;
+      const mouseY = e.offsetY / svg.clientHeight;
+
+      const newW = viewBox.w * zoomFactor;
+      const newH = viewBox.h * zoomFactor;
+
+      // Limit zoom bounds
+      if (newW > 600 && newW < 3000) {
+        viewBox.x += (viewBox.w - newW) * mouseX;
+        viewBox.y += (viewBox.h - newH) * mouseY;
+        viewBox.w = newW;
+        viewBox.h = newH;
+        updateViewBox();
+      }
+    });
+
+    svg.addEventListener('mousedown', (e) => {
+      if (e.target.closest('.map-node')) return;
+      isPanning = true;
+      startPoint = { x: e.clientX, y: e.clientY };
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isPanning) return;
+      const dx = (e.clientX - startPoint.x) * (viewBox.w / svg.clientWidth);
+      const dy = (e.clientY - startPoint.y) * (viewBox.h / svg.clientHeight);
+
+      viewBox.x -= dx;
+      viewBox.y -= dy;
+      startPoint = { x: e.clientX, y: e.clientY };
+      updateViewBox();
+    });
+
+    window.addEventListener('mouseup', () => {
+      isPanning = false;
+    });
+
+    // Draw Subtle Background Grid
+    function drawGrid() {
+      const gridGroup = document.getElementById('grid-group');
+      let lines = '';
+      for (let x = 0; x <= 1600; x += 100) {
+        lines += `<line x1="${x}" y1="0" x2="${x}" y2="1000" stroke="#94a3b8" stroke-width="1" />`;
+      }
+      for (let y = 0; y <= 1000; y += 100) {
+        lines += `<line x1="0" y1="${y}" x2="1600" y2="${y}" stroke="#94a3b8" stroke-width="1" />`;
+      }
+      gridGroup.innerHTML = lines;
+    }
+
+    // Initial Bootstrap
+    window.addEventListener('DOMContentLoaded', () => {
+      drawGrid();
+      renderMap();
+      updateChecklist();
+    });
+  </script>
+</body>
+</html>
